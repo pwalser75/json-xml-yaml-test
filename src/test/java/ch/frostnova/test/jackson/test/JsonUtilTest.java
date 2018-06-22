@@ -1,6 +1,6 @@
-package ch.frostnova.test.json.xml.yaml.test;
+package ch.frostnova.test.jackson.test;
 
-import ch.frostnova.test.json.xml.yaml.test.util.JsonUtil;
+import ch.frostnova.test.jackson.test.util.JsonUtil;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package ch.frostnova.test.json.xml.yaml.test.domain;
+package ch.frostnova.test.jackson.test.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -23,12 +25,16 @@ import java.util.Map;
 @JsonPropertyOrder({"title", "year", "genres", "rating"})
 public class Movie {
 
+    @JsonProperty("created")
+    @JacksonXmlProperty(isAttribute = true, localName = "created")
+    private ZonedDateTime created = ZonedDateTime.now().withZoneSameInstant(ZoneId.of("UTC"));
+
     @JsonProperty("title")
-    @JacksonXmlProperty(isAttribute = true, localName = "title")
+    @JacksonXmlProperty(localName = "title")
     private String title;
 
     @JsonProperty("year")
-    @JacksonXmlProperty(isAttribute = true, localName = "year")
+    @JacksonXmlProperty(localName = "year")
     private int year;
 
     @JsonProperty("genres")
@@ -85,6 +91,14 @@ public class Movie {
 
     public void setRatings(Map<String, Number> ratings) {
         this.ratings = ratings;
+    }
+
+    public ZonedDateTime getCreated() {
+        return created;
+    }
+
+    public void setCreated(ZonedDateTime created) {
+        this.created = created;
     }
 
     public String getSynopsis() {

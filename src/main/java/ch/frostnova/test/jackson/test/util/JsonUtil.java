@@ -1,4 +1,4 @@
-package ch.frostnova.test.json.xml.yaml.test.util;
+package ch.frostnova.test.jackson.test.util;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;

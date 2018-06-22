@@ -1,4 +1,4 @@
-package ch.frostnova.test.json.xml.yaml.test.util;
+package ch.frostnova.test.jackson.test.util;
 
 import java.util.Collection;
 import java.util.Iterator;

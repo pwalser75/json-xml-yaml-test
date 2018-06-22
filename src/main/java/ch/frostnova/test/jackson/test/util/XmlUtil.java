@@ -1,4 +1,4 @@
-package ch.frostnova.test.json.xml.yaml.test.util;
+package ch.frostnova.test.jackson.test.util;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,7 +28,7 @@ public final class XmlUtil {
      *
      * @param value value
      * @param <T>   type
-     * @return json json
+     * @return xm
      */
     public static <T> String stringify(T value) {
         if (value == null) {
@@ -42,19 +42,19 @@ public final class XmlUtil {
     }
 
     /**
-     * Convert the given JSON back to an object.
+     * Convert the given XML back to an object.
      *
      * @param type type
-     * @param json json
+     * @param xml  xml
      * @param <T>  type
      * @return object of the given type
      */
-    public static <T> T parse(Class<T> type, String json) {
-        if (json == null) {
+    public static <T> T parse(Class<T> type, String xml) {
+        if (xml == null) {
             return null;
         }
         try {
-            return objectMapper().readValue(json.getBytes(StandardCharsets.UTF_8), type);
+            return objectMapper().readValue(xml.getBytes(StandardCharsets.UTF_8), type);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
