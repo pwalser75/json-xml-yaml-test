@@ -10,7 +10,7 @@ import org.junit.Test;
 /**
  * Test JSON / XML / YAML serialization
  *
- * @author wap
+ * @author pwalser
  * @since 22.06.2018
  */
 public class SerializationTest {

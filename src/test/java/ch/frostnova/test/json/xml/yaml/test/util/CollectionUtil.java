@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 /**
  * Collection utility functions.
  *
- * @author wap
+ * @author pwalser
  * @since 18.06.2018
  */
 public final class CollectionUtil {
