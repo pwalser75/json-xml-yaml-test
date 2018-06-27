@@ -17,15 +17,21 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
- * Serial format with different flavours (JSON, XML, YAML)
+ * Serial format with different flavours (JSON, XML, YAML), thread save.
  *
  * @author pwalser
  * @since 27.06.2018
  */
 public abstract class SerialFormat {
+
+    private static ThreadLocal<JSON> JSON_FORMAT = new ThreadLocal<>();
+    private static ThreadLocal<XML> XML_FORMAT = new ThreadLocal<>();
+    private static ThreadLocal<YAML> YAML_FORMAT = new ThreadLocal<>();
 
     private final String name;
 
@@ -123,15 +129,23 @@ public abstract class SerialFormat {
     protected abstract ObjectMapper objectMapper();
 
     public static JSON json() {
-        return new JSON();
+        return lazyGet(JSON_FORMAT, JSON::new);
     }
 
     public static XML xml() {
-        return new XML();
+        return lazyGet(XML_FORMAT, XML::new);
     }
 
     public static YAML yaml() {
-        return new YAML();
+        return lazyGet(YAML_FORMAT, YAML::new);
+    }
+
+    private static <F extends SerialFormat> F lazyGet(ThreadLocal<F> threadLocal, Supplier<F> factory) {
+        return Optional.ofNullable(threadLocal.get()).orElseGet(() -> {
+            F value = factory.get();
+            threadLocal.set(value);
+            return value;
+        });
     }
 
     public static class JSON extends SerialFormat {

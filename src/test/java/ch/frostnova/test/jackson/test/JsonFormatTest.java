@@ -17,18 +17,17 @@ import java.util.Map;
  */
 public class JsonFormatTest {
 
-    private final SerialFormat.JSON jsonFormat = SerialFormat.json();
 
     @Test
     public void testStringify() {
-        Assert.assertEquals(null, jsonFormat.stringify(null));
-        Assert.assertEquals("123", jsonFormat.stringify(123));
-        Assert.assertEquals("\"456\"", jsonFormat.stringify("456"));
-        Assert.assertEquals("true", jsonFormat.stringify(true));
-        Assert.assertEquals("\"\"", jsonFormat.stringify(""));
+        Assert.assertEquals(null, SerialFormat.json().stringify(null));
+        Assert.assertEquals("123", SerialFormat.json().stringify(123));
+        Assert.assertEquals("\"456\"", SerialFormat.json().stringify("456"));
+        Assert.assertEquals("true", SerialFormat.json().stringify(true));
+        Assert.assertEquals("\"\"", SerialFormat.json().stringify(""));
 
         // arrays
-        Assert.assertEquals("[1,2,3,4,5]", jsonFormat.stringify(Arrays.asList(1, 2, 3, 4, 5)).replaceAll("\\s", ""));
+        Assert.assertEquals("[1,2,3,4,5]", SerialFormat.json().stringify(Arrays.asList(1, 2, 3, 4, 5)).replaceAll("\\s", ""));
 
         // maps
         Map<String, Object> map = new HashMap<>();
@@ -37,22 +36,22 @@ public class JsonFormatTest {
         map.put("c", "456");
         map.put("d", true);
         map.put("e", Arrays.asList(1, 2, 3));
-        Assert.assertEquals("{\"a\":true,\"b\":123,\"c\":\"456\",\"d\":true,\"e\":[1,2,3]}", jsonFormat.stringify(map).replaceAll("\\s", ""));
+        Assert.assertEquals("{\"a\":true,\"b\":123,\"c\":\"456\",\"d\":true,\"e\":[1,2,3]}", SerialFormat.json().stringify(map).replaceAll("\\s", ""));
     }
 
     @Test
     public void testParse() {
-        Assert.assertEquals(null, jsonFormat.parse(Object.class, (String) null));
-        Assert.assertEquals(Integer.valueOf(123), jsonFormat.parse(Integer.class, "123"));
-        Assert.assertEquals("456", jsonFormat.parse(String.class, "\"456\""));
-        Assert.assertEquals(Boolean.TRUE, jsonFormat.parse(Boolean.class, "true"));
-        Assert.assertEquals("", jsonFormat.parse(String.class, "\"\""));
+        Assert.assertEquals(null, SerialFormat.json().parse(Object.class, (String) null));
+        Assert.assertEquals(Integer.valueOf(123), SerialFormat.json().parse(Integer.class, "123"));
+        Assert.assertEquals("456", SerialFormat.json().parse(String.class, "\"456\""));
+        Assert.assertEquals(Boolean.TRUE, SerialFormat.json().parse(Boolean.class, "true"));
+        Assert.assertEquals("", SerialFormat.json().parse(String.class, "\"\""));
 
         // arrays
-        Assert.assertEquals(Arrays.asList(1, 2, 3, 4, 5), jsonFormat.parse(LinkedList.class, "[1,2,3,4,5]"));
+        Assert.assertEquals(Arrays.asList(1, 2, 3, 4, 5), SerialFormat.json().parse(LinkedList.class, "[1,2,3,4,5]"));
 
         // maps
-        HashMap<?, ?> map = jsonFormat.parse(HashMap.class, "{\"a\":true,\"b\":123,\"c\":\"456\",\"d\":true,\"e\":[1,2,3]}");
+        HashMap<?, ?> map = SerialFormat.json().parse(HashMap.class, "{\"a\":true,\"b\":123,\"c\":\"456\",\"d\":true,\"e\":[1,2,3]}");
         Assert.assertEquals(true, map.get("a"));
         Assert.assertEquals(123, map.get("b"));
         Assert.assertEquals("456", map.get("c"));
