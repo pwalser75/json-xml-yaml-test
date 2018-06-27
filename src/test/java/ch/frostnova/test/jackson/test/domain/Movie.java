@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Test bean with JAXB mappings.
+ * Test domain object
  *
  * @author pwalser
  * @since 25.01.2018.
@@ -49,6 +50,10 @@ public class Movie {
     @JacksonXmlProperty(localName = "synopsis")
     private String synopsis;
 
+    @JsonProperty("actors")
+    @JacksonXmlProperty(localName = "actor")
+    private List<Actor> actors = new LinkedList<>();
+
     public static Movie create() {
 
         Movie movie = new Movie();
@@ -58,6 +63,9 @@ public class Movie {
         movie.getRatings().put("IMDB", 8.2);
         movie.getRatings().put("Metacritic", 89d);
         movie.setSynopsis("A blade runner must pursue and terminate four replicants\n who stole a ship in space and have returned to Earth to find their creator.");
+        movie.getActors().add(new Actor("Harrison", "Ford", LocalDate.of(1942, 7, 13)));
+        movie.getActors().add(new Actor("Rutger", "Hauer", LocalDate.of(1944, 1, 23)));
+        movie.getActors().add(new Actor("Sean", "Young", LocalDate.of(1959, 11, 20)));
         return movie;
     }
 
@@ -107,5 +115,13 @@ public class Movie {
 
     public void setSynopsis(String synopsis) {
         this.synopsis = synopsis;
+    }
+
+    public List<Actor> getActors() {
+        return actors;
+    }
+
+    public void setActors(List<Actor> actors) {
+        this.actors = actors;
     }
 }

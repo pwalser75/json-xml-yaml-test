@@ -2,11 +2,11 @@ package ch.frostnova.test.jackson.test;
 
 import ch.frostnova.test.jackson.test.domain.Movie;
 import ch.frostnova.test.jackson.test.util.CollectionUtil;
-import ch.frostnova.test.jackson.test.util.JsonUtil;
-import ch.frostnova.test.jackson.test.util.XmlUtil;
-import ch.frostnova.test.jackson.test.util.YamlUtil;
+import ch.frostnova.test.jackson.test.util.SerialFormat;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.nio.charset.StandardCharsets;
 
 /**
  * Test JSON / XML / YAML serialization
@@ -19,37 +19,29 @@ public class SerializationTest {
 
     @Test
     public void testSerializeJSON() {
-
-        Movie movie = Movie.create();
-
-        String json = JsonUtil.stringify(movie);
-        System.out.println(json);
-
-        Movie parsed = JsonUtil.parse(Movie.class, json);
-        verifyParsed(movie, parsed);
+        testSerialize(SerialFormat.json());
     }
 
     @Test
     public void testSerializeXML() {
-
-        Movie movie = Movie.create();
-
-        String xml = XmlUtil.stringify(movie);
-        System.out.println(xml);
-
-        Movie parsed = XmlUtil.parse(Movie.class, xml);
-        verifyParsed(movie, parsed);
+        testSerialize(SerialFormat.xml());
     }
 
     @Test
     public void testSerializeYAML() {
+        testSerialize(SerialFormat.yaml());
+    }
 
+    private void testSerialize(SerialFormat format) {
+
+        System.out.println("Testing format: " + format.getName());
         Movie movie = Movie.create();
 
-        String yaml = YamlUtil.stringify(movie);
-        System.out.println(yaml);
+        String serialized = format.stringify(movie);
+        System.out.println(serialized);
+        System.out.println(serialized.getBytes(StandardCharsets.UTF_8).length + " bytes");
 
-        Movie parsed = YamlUtil.parse(Movie.class, yaml);
+        Movie parsed = format.parse(Movie.class, serialized);
         verifyParsed(movie, parsed);
     }
 
@@ -61,5 +53,6 @@ public class SerializationTest {
         Assert.assertNotNull(parsed.getGenres());
         Assert.assertTrue(CollectionUtil.equals(original.getGenres(), parsed.getGenres()));
         Assert.assertTrue(CollectionUtil.equals(original.getRatings(), parsed.getRatings()));
+        Assert.assertTrue(CollectionUtil.equals(original.getActors(), parsed.getActors()));
     }
 }
