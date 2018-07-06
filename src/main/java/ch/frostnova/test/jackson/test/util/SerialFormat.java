@@ -157,6 +157,7 @@ public abstract class SerialFormat {
         @Override
         protected ObjectMapper objectMapper() {
             ObjectMapper mapper = new ObjectMapper();
+            mapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector());
             return configure(mapper);
         }
     }
@@ -185,17 +186,17 @@ public abstract class SerialFormat {
         @Override
         protected ObjectMapper objectMapper() {
             ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+            mapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector());
             return configure(mapper);
         }
     }
 
-    private static ObjectMapper configure(ObjectMapper objectMapper) {
-        objectMapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector());
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        objectMapper.setDateFormat(new StdDateFormat());
-        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-        return objectMapper;
+    private static ObjectMapper configure(ObjectMapper mapper) {
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        mapper.setDateFormat(new StdDateFormat());
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        return mapper;
     }
 }

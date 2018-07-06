@@ -20,7 +20,7 @@ Serialized examples (`Movie` with `Actor`, `Genre` and `AspectRatio`):
       "title" : "Blade Runner",
       "year" : 1982,
       "genres" : [ "Sci-Fi", "Thriller" ],
-      "created" : "2018-07-06T22:42:51Z",
+      "created" : "2018-07-06T22:57:20Z",
       "ratings" : {
         "IMDB" : 8.2,
         "Metacritic" : 89.0
@@ -44,35 +44,32 @@ Serialized examples (`Movie` with `Actor`, `Genre` and `AspectRatio`):
 
 ### XML
 
-    <Movie>
+    <movie>
+      <ratings IMDB="8.2" Metacritic="89.0"/>
+      <created>2018-07-06T22:57:20Z</created>
       <title>Blade Runner</title>
       <year>1982</year>
-      <genres>Sci-Fi</genres>
-      <genres>Thriller</genres>
-      <created>2018-07-06T22:42:51Z</created>
-      <ratings>
-        <IMDB>8.2</IMDB>
-        <Metacritic>89.0</Metacritic>
-      </ratings>
+      <genre>Sci-Fi</genre>
+      <genre>Thriller</genre>
       <synopsis>A blade runner must pursue and terminate four replicants
      who stole a ship in space and have returned to Earth to find their creator.</synopsis>
-      <actors>
+      <actor>
         <firstName>Harrison</firstName>
         <lastName>Ford</lastName>
         <birthDate>1942-07-13</birthDate>
-      </actors>
-      <actors>
+      </actor>
+      <actor>
         <firstName>Rutger</firstName>
         <lastName>Hauer</lastName>
         <birthDate>1944-01-23</birthDate>
-      </actors>
-      <actors>
+      </actor>
+      <actor>
         <firstName>Sean</firstName>
         <lastName>Young</lastName>
         <birthDate>1959-11-20</birthDate>
-      </actors>
+      </actor>
       <aspectRatio>2.39:1</aspectRatio>
-    </Movie>
+    </movie>
 
 ### YAML
 
@@ -81,7 +78,7 @@ Serialized examples (`Movie` with `Actor`, `Genre` and `AspectRatio`):
     genres:
     - "Sci-Fi"
     - "Thriller"
-    created: "2018-07-06T22:42:51Z"
+    created: "2018-07-06T22:57:20Z"
     ratings:
       IMDB: 8.2
       Metacritic: 89.0
@@ -98,7 +95,6 @@ Serialized examples (`Movie` with `Actor`, `Genre` and `AspectRatio`):
       lastName: "Young"
       birthDate: "1959-11-20"
     aspectRatio: "2.39:1"
-
 
 ## Build
 
