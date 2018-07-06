@@ -20,7 +20,8 @@ Serialized examples (`Movie` with `Actor`, `Genre` and `AspectRatio`):
       "title" : "Blade Runner",
       "year" : 1982,
       "genres" : [ "Sci-Fi", "Thriller" ],
-      "created" : "2018-07-06T22:57:20Z",
+      "aspect-ratio" : "2.39:1",
+      "created" : "2018-07-06T23:00:12Z",
       "ratings" : {
         "IMDB" : 8.2,
         "Metacritic" : 89.0
@@ -38,19 +39,19 @@ Serialized examples (`Movie` with `Actor`, `Genre` and `AspectRatio`):
         "firstName" : "Sean",
         "lastName" : "Young",
         "birthDate" : "1959-11-20"
-      } ],
-      "aspectRatio" : "2.39:1"
+      } ]
     }
 
 ### XML
 
     <movie>
       <ratings IMDB="8.2" Metacritic="89.0"/>
-      <created>2018-07-06T22:57:20Z</created>
+      <created>2018-07-06T23:00:12Z</created>
       <title>Blade Runner</title>
       <year>1982</year>
       <genre>Sci-Fi</genre>
       <genre>Thriller</genre>
+      <aspectRatio>2.39:1</aspectRatio>
       <synopsis>A blade runner must pursue and terminate four replicants
      who stole a ship in space and have returned to Earth to find their creator.</synopsis>
       <actor>
@@ -68,7 +69,6 @@ Serialized examples (`Movie` with `Actor`, `Genre` and `AspectRatio`):
         <lastName>Young</lastName>
         <birthDate>1959-11-20</birthDate>
       </actor>
-      <aspectRatio>2.39:1</aspectRatio>
     </movie>
 
 ### YAML
@@ -78,7 +78,8 @@ Serialized examples (`Movie` with `Actor`, `Genre` and `AspectRatio`):
     genres:
     - "Sci-Fi"
     - "Thriller"
-    created: "2018-07-06T22:57:20Z"
+    aspect-ratio: "2.39:1"
+    created: "2018-07-06T23:00:12Z"
     ratings:
       IMDB: 8.2
       Metacritic: 89.0
@@ -94,7 +95,6 @@ Serialized examples (`Movie` with `Actor`, `Genre` and `AspectRatio`):
     - firstName: "Sean"
       lastName: "Young"
       birthDate: "1959-11-20"
-    aspectRatio: "2.39:1"
 
 ## Build
 

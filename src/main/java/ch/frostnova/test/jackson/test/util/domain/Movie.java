@@ -20,7 +20,7 @@ import java.util.*;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JacksonXmlRootElement(localName = "movie")
-@JsonPropertyOrder({"title", "year", "genres", "rating"})
+@JsonPropertyOrder({"title", "year", "genres", "aspectRatio", "rating"})
 public class Movie {
 
     @JsonProperty("created")
@@ -51,7 +51,7 @@ public class Movie {
     @JacksonXmlProperty(localName = "actor")
     private List<Actor> actors = new LinkedList<>();
 
-    @JsonProperty("aspectRatio")
+    @JsonProperty("aspect-ratio")
     @JacksonXmlProperty(localName = "aspectRatio")
     private AspectRatio aspectRatio;
 
