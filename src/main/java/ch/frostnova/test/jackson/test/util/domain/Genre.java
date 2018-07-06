@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 
 /**
  * Genres, serializer by their identifier.
+ *
  * @author pwalser
  * @since 07.07.2018.
  */
