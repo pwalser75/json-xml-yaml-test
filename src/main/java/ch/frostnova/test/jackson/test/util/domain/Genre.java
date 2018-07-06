@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 @JsonDeserialize(using = Genre.GenreDeserializer.class)
 public enum Genre {
 
-    SCI_FI("Scii-Fi"),
+    SCI_FI("Sci-Fi"),
     THRILLER("Thriller"),
     ACTION("Action"),
     COMEDY("Comedy"),

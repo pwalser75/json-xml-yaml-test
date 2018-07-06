@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
-import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
@@ -158,13 +157,7 @@ public abstract class SerialFormat {
         @Override
         protected ObjectMapper objectMapper() {
             ObjectMapper mapper = new ObjectMapper();
-            mapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector());
-            mapper.registerModule(new JavaTimeModule());
-            mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-            mapper.setDateFormat(new ISO8601DateFormat());
-            mapper.enable(SerializationFeature.INDENT_OUTPUT);
-            mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-            return mapper;
+            return configure(mapper);
         }
     }
 
@@ -179,12 +172,7 @@ public abstract class SerialFormat {
             JacksonXmlModule xmlModule = new JacksonXmlModule();
             xmlModule.setDefaultUseWrapper(false);
             XmlMapper mapper = new XmlMapper(xmlModule);
-            mapper.registerModule(new JavaTimeModule());
-            mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-            mapper.setDateFormat(new ISO8601DateFormat());
-            mapper.enable(SerializationFeature.INDENT_OUTPUT);
-            mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-            return mapper;
+            return configure(mapper);
         }
     }
 
@@ -197,12 +185,17 @@ public abstract class SerialFormat {
         @Override
         protected ObjectMapper objectMapper() {
             ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-            mapper.registerModule(new JavaTimeModule());
-            mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-            mapper.setDateFormat(new StdDateFormat());
-            mapper.enable(SerializationFeature.INDENT_OUTPUT);
-            mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-            return mapper;
+            return configure(mapper);
         }
+    }
+
+    private static ObjectMapper configure(ObjectMapper objectMapper) {
+        objectMapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector());
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        objectMapper.setDateFormat(new StdDateFormat());
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        return objectMapper;
     }
 }
