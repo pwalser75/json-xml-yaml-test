@@ -1,8 +1,8 @@
 package ch.frostnova.test.jackson.test;
 
-import ch.frostnova.test.jackson.test.domain.Movie;
 import ch.frostnova.test.jackson.test.util.CollectionUtil;
 import ch.frostnova.test.jackson.test.util.SerialFormat;
+import ch.frostnova.test.jackson.test.util.domain.Movie;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -50,6 +50,7 @@ public class SerializationTest {
         Assert.assertEquals(original.getYear(), parsed.getYear());
         Assert.assertEquals(original.getSynopsis(), parsed.getSynopsis());
         Assert.assertEquals(original.getCreated(), parsed.getCreated());
+        Assert.assertEquals(original.getAspectRatio(), parsed.getAspectRatio());
         Assert.assertNotNull(parsed.getGenres());
         Assert.assertTrue(CollectionUtil.equals(original.getGenres(), parsed.getGenres()));
         Assert.assertTrue(CollectionUtil.equals(original.getRatings(), parsed.getRatings()));

@@ -1,4 +1,4 @@
-package ch.frostnova.test.jackson.test.domain;
+package ch.frostnova.test.jackson.test.util.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

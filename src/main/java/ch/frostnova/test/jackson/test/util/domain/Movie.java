@@ -1,4 +1,4 @@
-package ch.frostnova.test.jackson.test.domain;
+package ch.frostnova.test.jackson.test.util.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -54,6 +54,10 @@ public class Movie {
     @JacksonXmlProperty(localName = "actor")
     private List<Actor> actors = new LinkedList<>();
 
+    @JsonProperty("aspectRatio")
+    @JacksonXmlProperty(localName = "aspectRatio")
+    private AspectRatio aspectRatio;
+
     public static Movie create() {
 
         Movie movie = new Movie();
@@ -63,6 +67,7 @@ public class Movie {
         movie.getRatings().put("IMDB", 8.2);
         movie.getRatings().put("Metacritic", 89d);
         movie.setSynopsis("A blade runner must pursue and terminate four replicants\n who stole a ship in space and have returned to Earth to find their creator.");
+        movie.setAspectRatio(new AspectRatio(2.39, 1));
         movie.getActors().add(new Actor("Harrison", "Ford", LocalDate.of(1942, 7, 13)));
         movie.getActors().add(new Actor("Rutger", "Hauer", LocalDate.of(1944, 1, 23)));
         movie.getActors().add(new Actor("Sean", "Young", LocalDate.of(1959, 11, 20)));
@@ -115,6 +120,14 @@ public class Movie {
 
     public void setSynopsis(String synopsis) {
         this.synopsis = synopsis;
+    }
+
+    public AspectRatio getAspectRatio() {
+        return aspectRatio;
+    }
+
+    public void setAspectRatio(AspectRatio aspectRatio) {
+        this.aspectRatio = aspectRatio;
     }
 
     public List<Actor> getActors() {
