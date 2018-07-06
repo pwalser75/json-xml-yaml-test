@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
+import com.fasterxml.jackson.databind.util.StdDateFormat;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -154,6 +155,7 @@ public abstract class SerialFormat {
             super("JSON");
         }
 
+        @Override
         protected ObjectMapper objectMapper() {
             ObjectMapper mapper = new ObjectMapper();
             mapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector());
@@ -172,6 +174,7 @@ public abstract class SerialFormat {
             super("XML");
         }
 
+        @Override
         protected ObjectMapper objectMapper() {
             JacksonXmlModule xmlModule = new JacksonXmlModule();
             xmlModule.setDefaultUseWrapper(false);
@@ -191,11 +194,12 @@ public abstract class SerialFormat {
             super("YAML");
         }
 
+        @Override
         protected ObjectMapper objectMapper() {
             ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
             mapper.registerModule(new JavaTimeModule());
             mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-            mapper.setDateFormat(new ISO8601DateFormat());
+            mapper.setDateFormat(new StdDateFormat());
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
             mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
             return mapper;

@@ -1,7 +1,7 @@
 package ch.frostnova.test.jackson.test.util.domain;
 
-import ch.frostnova.test.jackson.test.util.converter.AspectRatioDeserializer;
-import ch.frostnova.test.jackson.test.util.converter.ValueObjectSerializer;
+import ch.frostnova.test.jackson.test.util.converter.StringConstructorDeserializer;
+import ch.frostnova.test.jackson.test.util.converter.ToStringSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -16,9 +16,15 @@ import java.util.regex.Pattern;
  * @author pwalser
  * @since 06.07.2018
  */
-@JsonSerialize(using = ValueObjectSerializer.class)
-@JsonDeserialize(using = AspectRatioDeserializer.class)
+@JsonSerialize(using = ToStringSerializer.class)
+@JsonDeserialize(using = AspectRatio.AspectRatioDeserializer.class)
 public class AspectRatio {
+
+    static class AspectRatioDeserializer extends StringConstructorDeserializer<AspectRatio> {
+        public AspectRatioDeserializer() {
+            super(AspectRatio.class);
+        }
+    }
 
     private final static Pattern PATTERN = Pattern.compile("\\s*(\\d+(?:\\.\\d+)?)\\s*:\\s*(\\d+(?:\\.\\d+)?)\\s*");
     private final static DecimalFormat numberFormat = new DecimalFormat("0.##");
@@ -69,8 +75,12 @@ public class AspectRatio {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         AspectRatio other = (AspectRatio) o;
         return Objects.equals(getAspect(), other.getAspect());
     }

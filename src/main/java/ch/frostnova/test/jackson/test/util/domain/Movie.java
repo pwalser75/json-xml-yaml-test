@@ -9,11 +9,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 /**
  * Test domain object
@@ -28,7 +25,7 @@ public class Movie {
 
     @JsonProperty("created")
     @JacksonXmlProperty(isAttribute = true, localName = "created")
-    private ZonedDateTime created = ZonedDateTime.now().withZoneSameInstant(ZoneId.of("UTC"));
+    private ZonedDateTime created = ZonedDateTime.now().truncatedTo(ChronoUnit.SECONDS).withZoneSameInstant(ZoneId.of("UTC"));
 
     @JsonProperty("title")
     @JacksonXmlProperty(localName = "title")
@@ -40,7 +37,7 @@ public class Movie {
 
     @JsonProperty("genres")
     @JacksonXmlProperty(localName = "genre")
-    private List<String> genres = new LinkedList<>();
+    private List<Genre> genres = new LinkedList<>();
 
     @JsonProperty("ratings")
     @JacksonXmlProperty(isAttribute = true)
@@ -63,7 +60,7 @@ public class Movie {
         Movie movie = new Movie();
         movie.setTitle("Blade Runner");
         movie.setYear(1982);
-        movie.setGenres(Arrays.asList("Sci-Fi", "Thriller"));
+        movie.setGenres(Arrays.asList(Genre.SCI_FI, Genre.THRILLER));
         movie.getRatings().put("IMDB", 8.2);
         movie.getRatings().put("Metacritic", 89d);
         movie.setSynopsis("A blade runner must pursue and terminate four replicants\n who stole a ship in space and have returned to Earth to find their creator.");
@@ -90,11 +87,11 @@ public class Movie {
         this.year = year;
     }
 
-    public List<String> getGenres() {
+    public List<Genre> getGenres() {
         return genres;
     }
 
-    public void setGenres(List<String> genres) {
+    public void setGenres(List<Genre> genres) {
         this.genres = genres;
     }
 

@@ -16,11 +16,11 @@ import java.lang.reflect.Modifier;
  * @author pwalser
  * @since 06.07.2018
  */
-public abstract class ValueObjectDeserializer<T> extends StdDeserializer<T> {
+public abstract class StringConstructorDeserializer<T> extends StdDeserializer<T> {
 
     private final Constructor<T> constructor;
 
-    public ValueObjectDeserializer(Class<T> type) {
+    public StringConstructorDeserializer(Class<T> type) {
         super(type);
         if (type == null) {
             throw new IllegalArgumentException("Type is required");
@@ -48,7 +48,7 @@ public abstract class ValueObjectDeserializer<T> extends StdDeserializer<T> {
     public T deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
 
         String string = p.getValueAsString();
-        if (string == null) {
+        if (string == null || string.trim().length() == 0) {
             return null;
         }
         try {

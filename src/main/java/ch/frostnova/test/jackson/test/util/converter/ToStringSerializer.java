@@ -12,9 +12,9 @@ import java.io.IOException;
  * @author pwalser
  * @since 06.07.2018
  */
-public final class ValueObjectSerializer extends StdSerializer<Object> {
+public final class ToStringSerializer extends StdSerializer<Object> {
 
-    public ValueObjectSerializer() {
+    public ToStringSerializer() {
         super(Object.class);
     }
 
