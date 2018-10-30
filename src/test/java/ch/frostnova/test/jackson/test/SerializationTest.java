@@ -3,6 +3,11 @@ package ch.frostnova.test.jackson.test;
 import ch.frostnova.test.jackson.test.util.CollectionUtil;
 import ch.frostnova.test.jackson.test.util.SerialFormat;
 import ch.frostnova.test.jackson.test.util.domain.Movie;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.MappingIterator;
+import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
+import com.fasterxml.jackson.dataformat.csv.CsvMapper;
+import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -15,7 +20,6 @@ import java.nio.charset.StandardCharsets;
  * @since 22.06.2018
  */
 public class SerializationTest {
-
 
     @Test
     public void testSerializeJSON() {
@@ -30,6 +34,41 @@ public class SerializationTest {
     @Test
     public void testSerializeYAML() {
         testSerialize(SerialFormat.yaml());
+    }
+
+    @Test
+    public void testSerializeCSV() throws Exception {
+
+        Movie movie = Movie.create();
+
+        CsvSchema schema = CsvSchema.builder()
+                .setUseHeader(true)
+                .addColumn("title")
+                .addColumn("year")
+                .addColumn("aspect-ratio")
+                .addArrayColumn("genres")
+                .addColumn("created")
+                .build();
+
+        CsvMapper mapper = new CsvMapper();
+        SerialFormat.configure(mapper);
+        mapper.configure(JsonGenerator.Feature.IGNORE_UNKNOWN, true);
+        mapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector());
+
+        String serialized = mapper.writerFor(Movie.class).with(schema).writeValueAsString(movie);
+        System.out.println(serialized);
+
+        MappingIterator<Movie> iter = mapper.readerFor(Movie.class).with(schema).readValues(serialized);
+        Assert.assertTrue(iter.hasNext());
+        Movie restored = iter.next();
+        System.out.println(SerialFormat.json().stringify(restored));
+        Assert.assertEquals(movie.getTitle(), restored.getTitle());
+        Assert.assertEquals(movie.getYear(), restored.getYear());
+        Assert.assertEquals(movie.getAspectRatio(), restored.getAspectRatio());
+        Assert.assertTrue(CollectionUtil.equals(movie.getGenres(), restored.getGenres()));
+
+        Assert.assertFalse(iter.hasNext());
+
     }
 
     private void testSerialize(SerialFormat format) {

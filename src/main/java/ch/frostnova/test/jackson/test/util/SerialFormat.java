@@ -62,19 +62,19 @@ public abstract class SerialFormat {
     }
 
     /**
-     * Convert the given JSON back to an object.
+     * Convert the given serialized data back to an object.
      *
-     * @param type type
-     * @param json json
-     * @param <T>  type
+     * @param type       type
+     * @param serialized serialized data
+     * @param <T>        type
      * @return object of the given type
      */
-    public <T> T parse(Class<T> type, String json) {
-        if (json == null) {
+    public <T> T parse(Class<T> type, String serialized) {
+        if (serialized == null) {
             return null;
         }
         try {
-            return objectMapper().readValue(json.getBytes(StandardCharsets.UTF_8), type);
+            return objectMapper().readValue(serialized.getBytes(StandardCharsets.UTF_8), type);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
@@ -191,7 +191,7 @@ public abstract class SerialFormat {
         }
     }
 
-    private static ObjectMapper configure(ObjectMapper mapper) {
+    public static <T extends ObjectMapper> T configure(T mapper) {
         mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         mapper.setDateFormat(new StdDateFormat());
