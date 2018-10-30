@@ -69,7 +69,7 @@ ext.libs = [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.6"
         ],
         csv: [
-                "com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.8.8"
+                "com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.9.6"
         ],
         testbase          : [
                 "junit:junit:4.12",
