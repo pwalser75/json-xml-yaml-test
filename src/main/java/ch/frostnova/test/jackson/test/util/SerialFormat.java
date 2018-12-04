@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.util.StdDateFormat;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.BufferedReader;
@@ -185,7 +186,8 @@ public abstract class SerialFormat {
 
         @Override
         protected ObjectMapper objectMapper() {
-            ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+            YAMLFactory yamlFactory = new YAMLFactory().enable(YAMLGenerator.Feature.MINIMIZE_QUOTES);
+            ObjectMapper mapper = new ObjectMapper(yamlFactory);
             mapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector());
             return configure(mapper);
         }

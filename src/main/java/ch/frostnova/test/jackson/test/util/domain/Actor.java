@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 import java.time.LocalDate;
@@ -21,7 +22,7 @@ import java.util.stream.Stream;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JacksonXmlRootElement(localName = "actor")
-@JsonPropertyOrder({"firstName", "lastName", "birthDate", "rating"})
+@JsonPropertyOrder({"firstName", "lastName", "dateOfBirth", "age"})
 public class Actor {
 
     private final String firstName;
@@ -53,6 +54,7 @@ public class Actor {
     }
 
     @JsonProperty(value = "age", access = JsonProperty.Access.READ_ONLY)
+    @JacksonXmlProperty(isAttribute = true)
     public Integer getAge() {
         if (birthDate == null) {
             return null;

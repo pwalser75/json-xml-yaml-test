@@ -14,14 +14,14 @@ Testing Jackson JSON/XML/YAML object mapping
 
 Serialized examples (`Movie` with `Actor`, `Genre` and `AspectRatio`):
 
-### JSON
+### JSON (742 bytes)
 
     {
       "title" : "Blade Runner",
       "year" : 1982,
       "genres" : [ "Sci-Fi", "Thriller" ],
       "aspect-ratio" : "2.39:1",
-      "created" : "2018-07-06T23:00:12Z",
+      "created" : "2018-12-04T12:17:20Z",
       "ratings" : {
         "IMDB" : 8.2,
         "Metacritic" : 89.0
@@ -30,23 +30,26 @@ Serialized examples (`Movie` with `Actor`, `Genre` and `AspectRatio`):
       "actors" : [ {
         "firstName" : "Harrison",
         "lastName" : "Ford",
-        "birthDate" : "1942-07-13"
+        "dateOfBirth" : "1942-07-13",
+        "age" : 76
       }, {
         "firstName" : "Rutger",
         "lastName" : "Hauer",
-        "birthDate" : "1944-01-23"
+        "dateOfBirth" : "1944-01-23",
+        "age" : 74
       }, {
         "firstName" : "Sean",
         "lastName" : "Young",
-        "birthDate" : "1959-11-20"
+        "dateOfBirth" : "1959-11-20",
+        "age" : 59
       } ]
     }
 
-### XML
+### XML (829 bytes)
 
     <movie>
       <ratings IMDB="8.2" Metacritic="89.0"/>
-      <created>2018-07-06T23:00:12Z</created>
+      <created>2018-12-04T12:17:21Z</created>
       <title>Blade Runner</title>
       <year>1982</year>
       <genre>Sci-Fi</genre>
@@ -54,47 +57,51 @@ Serialized examples (`Movie` with `Actor`, `Genre` and `AspectRatio`):
       <aspectRatio>2.39:1</aspectRatio>
       <synopsis>A blade runner must pursue and terminate four replicants
      who stole a ship in space and have returned to Earth to find their creator.</synopsis>
-      <actor>
+      <actor age="76">
         <firstName>Harrison</firstName>
         <lastName>Ford</lastName>
-        <birthDate>1942-07-13</birthDate>
+        <dateOfBirth>1942-07-13</dateOfBirth>
       </actor>
-      <actor>
+      <actor age="74">
         <firstName>Rutger</firstName>
         <lastName>Hauer</lastName>
-        <birthDate>1944-01-23</birthDate>
+        <dateOfBirth>1944-01-23</dateOfBirth>
       </actor>
-      <actor>
+      <actor age="59">
         <firstName>Sean</firstName>
         <lastName>Young</lastName>
-        <birthDate>1959-11-20</birthDate>
+        <dateOfBirth>1959-11-20</dateOfBirth>
       </actor>
     </movie>
 
-### YAML
+### YAML (534 bytes)
 
-    title: "Blade Runner"
+    title: Blade Runner
     year: 1982
     genres:
-    - "Sci-Fi"
-    - "Thriller"
-    aspect-ratio: "2.39:1"
-    created: "2018-07-06T23:00:12Z"
+    - Sci-Fi
+    - Thriller
+    aspect-ratio: 2.39:1
+    created: 2018-12-04T12:19:39Z
     ratings:
       IMDB: 8.2
       Metacritic: 89.0
-    synopsis: "A blade runner must pursue and terminate four replicants\n who stole a\
-      \ ship in space and have returned to Earth to find their creator."
+    synopsis: |-
+      A blade runner must pursue and terminate four replicants
+       who stole a ship in space and have returned to Earth to find their creator.
     actors:
-    - firstName: "Harrison"
-      lastName: "Ford"
-      birthDate: "1942-07-13"
-    - firstName: "Rutger"
-      lastName: "Hauer"
-      birthDate: "1944-01-23"
-    - firstName: "Sean"
-      lastName: "Young"
-      birthDate: "1959-11-20"
+    - firstName: Harrison
+      lastName: Ford
+      dateOfBirth: 1942-07-13
+      age: 76
+    - firstName: Rutger
+      lastName: Hauer
+      dateOfBirth: 1944-01-23
+      age: 74
+    - firstName: Sean
+      lastName: Young
+      dateOfBirth: 1959-11-20
+      age: 59
 
 ## Build
 
