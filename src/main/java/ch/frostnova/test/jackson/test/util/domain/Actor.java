@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,22 +31,33 @@ public class Actor {
     private final LocalDate birthDate;
 
     @JsonCreator
-    public Actor(@JsonProperty("firstName") String firstName, @JsonProperty("lastName") String lastName, @JsonProperty("birthDate") LocalDate birthDate) {
+    public Actor(@JsonProperty("firstName") String firstName, @JsonProperty("lastName") String lastName, @JsonProperty("dateOfBirth") LocalDate birthDate) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthDate = birthDate;
     }
 
+    @JsonProperty(value = "firstName")
     public String getFirstName() {
         return firstName;
     }
 
+    @JsonProperty(value = "lastName")
     public String getLastName() {
         return lastName;
     }
 
+    @JsonProperty(value = "dateOfBirth")
     public LocalDate getBirthDate() {
         return birthDate;
+    }
+
+    @JsonProperty(value = "age", access = JsonProperty.Access.READ_ONLY)
+    public Integer getAge() {
+        if (birthDate == null) {
+            return null;
+        }
+        return Period.between(birthDate, LocalDate.now()).getYears();
     }
 
     @Override
