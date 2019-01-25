@@ -55,6 +55,10 @@ public class Movie {
     @JacksonXmlProperty(localName = "aspectRatio")
     private AspectRatio aspectRatio;
 
+    @JsonProperty("metadata")
+    @JacksonXmlProperty(localName = "metadata")
+    private Metadata metadata = new Metadata();
+
     public static Movie create() {
 
         Movie movie = new Movie();
@@ -68,6 +72,9 @@ public class Movie {
         movie.getActors().add(new Actor("Harrison", "Ford", LocalDate.of(1942, 7, 13)));
         movie.getActors().add(new Actor("Rutger", "Hauer", LocalDate.of(1944, 1, 23)));
         movie.getActors().add(new Actor("Sean", "Young", LocalDate.of(1959, 11, 20)));
+        movie.getMetadata().set("director", "Ridley Scott");
+        movie.getMetadata().set("screenplay", "Hampton Fancher, David Webb Peoples");
+        movie.getMetadata().set("release-date", "1982-06-25");
         return movie;
     }
 
@@ -133,5 +140,13 @@ public class Movie {
 
     public void setActors(List<Actor> actors) {
         this.actors = actors;
+    }
+
+    public Metadata getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(Metadata metadata) {
+        this.metadata = metadata;
     }
 }

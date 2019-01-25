@@ -5,14 +5,15 @@ Testing Jackson JSON/XML/YAML object mapping
 
 - shows how to properly configure the Jackson `ObjectMapper` (with Java 8 Date/Time API support)
 - demonstrates how to serialize/deserialize JSON, XML and YAML with Jackson
-- bean serialization &rarr; `Movie`, `Actor`
-- function-based custom serialization using `FunctionalSerializer` / `FunctionalDesrializer`
-- custom serialization for enums using arbitrary string identifiers, ignoring case &rarr; `Genre`
-- custom serialization for immutable value objects with string constructor / `toString()` &rarr; `AspectRatio`
+- **bean** serialization &rarr; `Movie`, `Actor`
+- custom serialization for **enums** using arbitrary string identifiers, ignoring case &rarr; `Genre`
+- custom serialization for **domain object** &rarr; `Metadata` with `MetadataConverter.Serializer` and `MetadataConverter.Deserializer`
+- custom serialization for **immutable value objects** with string constructor / `toString()` &rarr; `AspectRatio`
+- function-based custom serialization using `FunctionalSerializer` / `FunctionalDeserializer`
 
 ## Examples
 
-Serialized examples (`Movie` with `Actor`, `Genre` and `AspectRatio`):
+Serialized examples (`Movie` with `Actor`, `Genre`, `AspectRatio` and `Metadata`):
 
 ### JSON (742 bytes)
 
@@ -21,7 +22,7 @@ Serialized examples (`Movie` with `Actor`, `Genre` and `AspectRatio`):
       "year" : 1982,
       "genres" : [ "Sci-Fi", "Thriller" ],
       "aspect-ratio" : "2.39:1",
-      "created" : "2018-12-04T12:17:20Z",
+      "created" : "2019-01-25T11:22:24Z",
       "ratings" : {
         "IMDB" : 8.2,
         "Metacritic" : 89.0
@@ -36,20 +37,25 @@ Serialized examples (`Movie` with `Actor`, `Genre` and `AspectRatio`):
         "firstName" : "Rutger",
         "lastName" : "Hauer",
         "dateOfBirth" : "1944-01-23",
-        "age" : 74
+        "age" : 75
       }, {
         "firstName" : "Sean",
         "lastName" : "Young",
         "dateOfBirth" : "1959-11-20",
         "age" : 59
-      } ]
+      } ],
+      "metadata" : {
+        "director" : "Ridley Scott",
+        "release-date" : "1982-06-25",
+        "screenplay" : "Hampton Fancher, David Webb Peoples"
+      }
     }
 
 ### XML (829 bytes)
 
     <movie>
       <ratings IMDB="8.2" Metacritic="89.0"/>
-      <created>2018-12-04T12:17:21Z</created>
+      <created>2019-01-25T11:22:24Z</created>
       <title>Blade Runner</title>
       <year>1982</year>
       <genre>Sci-Fi</genre>
@@ -62,7 +68,7 @@ Serialized examples (`Movie` with `Actor`, `Genre` and `AspectRatio`):
         <lastName>Ford</lastName>
         <dateOfBirth>1942-07-13</dateOfBirth>
       </actor>
-      <actor age="74">
+      <actor age="75">
         <firstName>Rutger</firstName>
         <lastName>Hauer</lastName>
         <dateOfBirth>1944-01-23</dateOfBirth>
@@ -72,6 +78,11 @@ Serialized examples (`Movie` with `Actor`, `Genre` and `AspectRatio`):
         <lastName>Young</lastName>
         <dateOfBirth>1959-11-20</dateOfBirth>
       </actor>
+      <metadata>
+        <director>Ridley Scott</director>
+        <release-date>1982-06-25</release-date>
+        <screenplay>Hampton Fancher, David Webb Peoples</screenplay>
+      </metadata>
     </movie>
 
 ### YAML (534 bytes)
@@ -82,7 +93,7 @@ Serialized examples (`Movie` with `Actor`, `Genre` and `AspectRatio`):
     - Sci-Fi
     - Thriller
     aspect-ratio: 2.39:1
-    created: 2018-12-04T12:19:39Z
+    created: 2019-01-25T11:22:24Z
     ratings:
       IMDB: 8.2
       Metacritic: 89.0
@@ -97,11 +108,15 @@ Serialized examples (`Movie` with `Actor`, `Genre` and `AspectRatio`):
     - firstName: Rutger
       lastName: Hauer
       dateOfBirth: 1944-01-23
-      age: 74
+      age: 75
     - firstName: Sean
       lastName: Young
       dateOfBirth: 1959-11-20
       age: 59
+    metadata:
+      director: Ridley Scott
+      release-date: 1982-06-25
+      screenplay: Hampton Fancher, David Webb Peoples
 
 ## Build
 

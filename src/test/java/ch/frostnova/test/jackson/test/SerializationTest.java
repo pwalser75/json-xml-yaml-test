@@ -94,5 +94,10 @@ public class SerializationTest {
         Assert.assertTrue(CollectionUtil.equals(original.getGenres(), parsed.getGenres()));
         Assert.assertTrue(CollectionUtil.equals(original.getRatings(), parsed.getRatings()));
         Assert.assertTrue(CollectionUtil.equals(original.getActors(), parsed.getActors()));
+        Assert.assertTrue(CollectionUtil.equals(original.getMetadata().getKeys(), parsed.getMetadata().getKeys()));
+        for (String key : original.getMetadata().getKeys()) {
+            Assert.assertEquals(original.getMetadata().get(key).get(), parsed.getMetadata().get(key).get());
+        }
+
     }
 }
