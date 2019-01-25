@@ -15,7 +15,7 @@ Testing Jackson JSON/XML/YAML object mapping
 
 Serialized examples (`Movie` with `Actor`, `Genre`, `AspectRatio` and `Metadata`):
 
-### JSON (742 bytes)
+### JSON (894 bytes)
 
     {
       "title" : "Blade Runner",
@@ -51,7 +51,7 @@ Serialized examples (`Movie` with `Actor`, `Genre`, `AspectRatio` and `Metadata`
       }
     }
 
-### XML (829 bytes)
+### XML (1008 bytes)
 
     <movie>
       <ratings IMDB="8.2" Metacritic="89.0"/>
@@ -85,7 +85,7 @@ Serialized examples (`Movie` with `Actor`, `Genre`, `AspectRatio` and `Metadata`
       </metadata>
     </movie>
 
-### YAML (534 bytes)
+### YAML (646 bytes)
 
     title: Blade Runner
     year: 1982

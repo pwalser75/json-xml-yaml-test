@@ -78,7 +78,7 @@ public class SerializationTest {
 
         String serialized = format.stringify(movie);
         System.out.println(serialized);
-        System.out.println(serialized.getBytes(StandardCharsets.UTF_8).length + " bytes");
+        System.out.println(serialized.getBytes(StandardCharsets.UTF_8).length + " bytes (UTF-8)");
 
         Movie parsed = format.parse(Movie.class, serialized);
         verifyParsed(movie, parsed);
