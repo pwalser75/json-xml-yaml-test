@@ -21,12 +21,12 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		
-		<junitVersion>4.12</junitVersion>
-		<mockitoVersion>2.23.4</mockitoVersion>
-		<jacksonVersion>2.9.8</jacksonVersion>
-		<slf4jVersion>1.7.25</slf4jVersion>
-		<logbackVersion>1.2.3</logbackVersion>
+
+        <junitVersion>4.12</junitVersion>
+        <mockitoVersion>2.23.4</mockitoVersion>
+        <jacksonVersion>2.9.8</jacksonVersion>
+        <slf4jVersion>1.7.25</slf4jVersion>
+        <logbackVersion>1.2.3</logbackVersion>
     </properties>
 
     <dependencies>
@@ -97,6 +97,11 @@
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-csv</artifactId>
+            <version>${jacksonVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-cbor</artifactId>
             <version>${jacksonVersion}</version>
         </dependency>
     </dependencies>

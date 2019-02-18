@@ -63,7 +63,7 @@ ext {
     logbackVersion = '1.2.3'
 
     libs = [
-        json              : [
+        jackson              : [
                 "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}",
                 "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}",
                 "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
@@ -73,6 +73,9 @@ ext {
         ],
         yaml : [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}"
+        ],
+        cbor : [
+                "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:${jacksonVersion}"
         ],
         csv: [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-csv:${jacksonVersion}"
@@ -93,9 +96,10 @@ ext {
 }
 
 dependencies {
-    compile libs.json
+    compile libs.jackson
     compile libs.xml
     compile libs.yaml
+    compile libs.cbor
     compile libs.csv
     compile libs.loggingAPI
     compile libs.loggingImpl

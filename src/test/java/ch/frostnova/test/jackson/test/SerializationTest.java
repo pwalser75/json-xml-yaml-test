@@ -11,8 +11,6 @@ import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.nio.charset.StandardCharsets;
-
 /**
  * Test JSON / XML / YAML serialization
  *
@@ -34,6 +32,11 @@ public class SerializationTest {
     @Test
     public void testSerializeYAML() {
         testSerialize(SerialFormat.yaml());
+    }
+
+    @Test
+    public void testSerializeCBOR() {
+        testSerialize(SerialFormat.cbor());
     }
 
     @Test
@@ -76,11 +79,16 @@ public class SerializationTest {
         System.out.println("Testing format: " + format.getName());
         Movie movie = Movie.create();
 
-        String serialized = format.stringify(movie);
-        System.out.println(serialized);
-        System.out.println(serialized.getBytes(StandardCharsets.UTF_8).length + " bytes (UTF-8)");
+        if (!format.isBinary()) {
+            String serialized = format.stringify(movie);
+            System.out.println(serialized);
+            Movie parsed = format.parse(Movie.class, serialized);
+            verifyParsed(movie, parsed);
+        }
 
-        Movie parsed = format.parse(Movie.class, serialized);
+        byte[] serialized = format.serialize(movie);
+        System.out.println(serialized.length + " bytes");
+        Movie parsed = format.deserialize(Movie.class, serialized);
         verifyParsed(movie, parsed);
     }
 

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
+import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -18,6 +19,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -30,26 +33,30 @@ import java.util.stream.Collectors;
  */
 public abstract class SerialFormat {
 
-    private static ThreadLocal<JSON> JSON_FORMAT = new ThreadLocal<>();
-    private static ThreadLocal<XML> XML_FORMAT = new ThreadLocal<>();
-    private static ThreadLocal<YAML> YAML_FORMAT = new ThreadLocal<>();
+    private static Map<Class<? extends SerialFormat>, ThreadLocal<SerialFormat>> threadLocalSerialFormats = new HashMap<>();
 
     private final String name;
+    private final boolean binary;
 
-    private SerialFormat(String name) {
+    private SerialFormat(String name, boolean binary) {
         this.name = name;
+        this.binary = binary;
     }
 
     public String getName() {
         return name;
     }
 
+    public boolean isBinary() {
+        return binary;
+    }
+
     /**
-     * Convert the given object to JSON.
+     * Convert the given object to a serialized string.
      *
      * @param value value
      * @param <T>   type
-     * @return json json
+     * @return string serialized string
      */
     public <T> String stringify(T value) {
         if (value == null) {
@@ -57,6 +64,43 @@ public abstract class SerialFormat {
         }
         try {
             return objectMapper().writeValueAsString(value);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    /**
+     * Serialize the given object
+     *
+     * @param value value
+     * @param <T>   type
+     * @return string serialized format
+     */
+    public <T> byte[] serialize(T value) {
+        if (value == null) {
+            return null;
+        }
+        try {
+            return objectMapper().writeValueAsBytes(value);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    /**
+     * Convert the given serialized data back to an object.
+     *
+     * @param type       type
+     * @param serialized serialized data
+     * @param <T>        type
+     * @return object of the given type
+     */
+    public <T> T deserialize(Class<T> type, byte[] serialized) {
+        if (serialized == null) {
+            return null;
+        }
+        try {
+            return objectMapper().readValue(serialized, type);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
@@ -74,11 +118,7 @@ public abstract class SerialFormat {
         if (serialized == null) {
             return null;
         }
-        try {
-            return objectMapper().readValue(serialized.getBytes(StandardCharsets.UTF_8), type);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
+        return deserialize(type, serialized.getBytes(StandardCharsets.UTF_8));
     }
 
     public <T> T parse(Class<T> type, InputStream in) {
@@ -130,19 +170,29 @@ public abstract class SerialFormat {
     protected abstract ObjectMapper objectMapper();
 
     public static JSON json() {
-        return lazyGet(JSON_FORMAT, JSON::new);
+        return lazyGet(JSON.class, JSON::new);
     }
 
     public static XML xml() {
-        return lazyGet(XML_FORMAT, XML::new);
+        return lazyGet(XML.class, XML::new);
     }
 
     public static YAML yaml() {
-        return lazyGet(YAML_FORMAT, YAML::new);
+        return lazyGet(YAML.class, YAML::new);
     }
 
-    private static <F extends SerialFormat> F lazyGet(ThreadLocal<F> threadLocal, Supplier<F> factory) {
-        return Optional.ofNullable(threadLocal.get()).orElseGet(() -> {
+    public static CBOR cbor() {
+        return lazyGet(CBOR.class, CBOR::new);
+    }
+
+    private static <F extends SerialFormat> F lazyGet(Class<F> format, Supplier<F> factory) {
+
+        synchronized (SerialFormat.class) {
+            threadLocalSerialFormats.putIfAbsent(format, new ThreadLocal<>());
+        }
+        ThreadLocal<SerialFormat> threadLocal = threadLocalSerialFormats.get(format);
+
+        return Optional.ofNullable(threadLocal.get()).map(format::cast).orElseGet(() -> {
             F value = factory.get();
             threadLocal.set(value);
             return value;
@@ -152,7 +202,7 @@ public abstract class SerialFormat {
     public static class JSON extends SerialFormat {
 
         private JSON() {
-            super("JSON");
+            super("JSON", false);
         }
 
         @Override
@@ -166,7 +216,7 @@ public abstract class SerialFormat {
     public static class XML extends SerialFormat {
 
         private XML() {
-            super("XML");
+            super("XML", false);
         }
 
         @Override
@@ -181,13 +231,30 @@ public abstract class SerialFormat {
     public static class YAML extends SerialFormat {
 
         private YAML() {
-            super("YAML");
+            super("YAML", false);
         }
 
         @Override
         protected ObjectMapper objectMapper() {
             YAMLFactory yamlFactory = new YAMLFactory().enable(YAMLGenerator.Feature.MINIMIZE_QUOTES);
             ObjectMapper mapper = new ObjectMapper(yamlFactory);
+            mapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector());
+            return configure(mapper);
+        }
+    }
+
+    /**
+     * CBOR = Concise Binary Object Representation (https://www.rfc-editor.org/info/rfc7049)
+     */
+    public static class CBOR extends SerialFormat {
+
+        private CBOR() {
+            super("CBOR", true);
+        }
+
+        @Override
+        protected ObjectMapper objectMapper() {
+            ObjectMapper mapper = new ObjectMapper(new CBORFactory());
             mapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector());
             return configure(mapper);
         }
