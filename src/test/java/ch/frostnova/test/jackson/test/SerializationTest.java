@@ -20,27 +20,27 @@ import org.junit.Test;
 public class SerializationTest {
 
     @Test
-    public void testSerializeJSON() {
-        testSerialize(SerialFormat.json());
+    public void testJSON() {
+        test(SerialFormat.json());
     }
 
     @Test
-    public void testSerializeXML() {
-        testSerialize(SerialFormat.xml());
+    public void testXML() {
+        test(SerialFormat.xml());
     }
 
     @Test
-    public void testSerializeYAML() {
-        testSerialize(SerialFormat.yaml());
+    public void testYAML() {
+        test(SerialFormat.yaml());
     }
 
     @Test
-    public void testSerializeCBOR() {
-        testSerialize(SerialFormat.cbor());
+    public void testCBOR() {
+        test(SerialFormat.cbor());
     }
 
     @Test
-    public void testSerializeCSV() throws Exception {
+    public void testCSV() throws Exception {
 
         Movie movie = Movie.create();
 
@@ -74,22 +74,53 @@ public class SerializationTest {
 
     }
 
-    private void testSerialize(SerialFormat format) {
+    private void test(SerialFormat format) {
 
         System.out.println("Testing format: " + format.getName());
-        Movie movie = Movie.create();
-
         if (!format.isBinary()) {
-            String serialized = format.stringify(movie);
-            System.out.println(serialized);
-            Movie parsed = format.parse(Movie.class, serialized);
-            verifyParsed(movie, parsed);
+            testSerializeText(format);
         }
+        testSerialize(format);
+        benchmark(format);
+    }
 
+    private void testSerialize(SerialFormat format) {
+
+        Movie movie = Movie.create();
         byte[] serialized = format.serialize(movie);
         System.out.println(serialized.length + " bytes");
         Movie parsed = format.deserialize(Movie.class, serialized);
         verifyParsed(movie, parsed);
+    }
+
+    private void testSerializeText(SerialFormat format) {
+
+        Movie movie = Movie.create();
+        String serialized = format.stringify(movie);
+        System.out.println(serialized);
+        Movie parsed = format.parse(Movie.class, serialized);
+        verifyParsed(movie, parsed);
+    }
+
+    private void benchmark(SerialFormat format) {
+
+        Movie movie = Movie.create();
+        int samples = 1000;
+
+        long time = System.nanoTime();
+        for (int i = 0; i < samples; i++) {
+            format.serialize(movie);
+        }
+        time = System.nanoTime() - time;
+        System.out.println((time / samples / 1000) + " µS serialization");
+
+        byte[] serialized = format.serialize(movie);
+        time = System.nanoTime();
+        for (int i = 0; i < samples; i++) {
+            format.deserialize(Movie.class, serialized);
+        }
+        time = System.nanoTime() - time;
+        System.out.println((time / samples / 1000) + " µS deserialization");
     }
 
     private void verifyParsed(Movie original, Movie parsed) {
