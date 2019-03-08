@@ -1,6 +1,7 @@
 package ch.frostnova.test.jackson.test.util.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -18,6 +19,7 @@ import java.util.*;
  * @author pwalser
  * @since 25.01.2018.
  */
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JacksonXmlRootElement(localName = "movie")
 @JsonPropertyOrder({"title", "year", "genres", "aspectRatio", "rating"})

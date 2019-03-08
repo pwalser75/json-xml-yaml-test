@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  */
 public abstract class SerialFormat {
 
-    private static Map<Class<? extends SerialFormat>, ThreadLocal<SerialFormat>> threadLocalSerialFormats = new HashMap<>();
+    private static Map<Class<? extends SerialFormat>, SerialFormat> serialFormats = new HashMap<>();
 
     private final String name;
     private final boolean binary;
@@ -187,15 +187,10 @@ public abstract class SerialFormat {
 
     private static <F extends SerialFormat> F lazyGet(Class<F> format, Supplier<F> factory) {
 
-        synchronized (SerialFormat.class) {
-            threadLocalSerialFormats.putIfAbsent(format, new ThreadLocal<>());
-        }
-        ThreadLocal<SerialFormat> threadLocal = threadLocalSerialFormats.get(format);
-
-        return Optional.ofNullable(threadLocal.get()).map(format::cast).orElseGet(() -> {
-            F value = factory.get();
-            threadLocal.set(value);
-            return value;
+        return Optional.ofNullable(serialFormats.get(format)).map(format::cast).orElseGet(() -> {
+            F instance = factory.get();
+            serialFormats.put(format, instance);
+            return instance;
         });
     }
 

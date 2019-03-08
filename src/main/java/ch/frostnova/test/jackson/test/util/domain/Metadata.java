@@ -1,6 +1,7 @@
 package ch.frostnova.test.jackson.test.util.domain;
 
 import ch.frostnova.test.jackson.test.util.converter.MetadataConverter;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -15,6 +16,7 @@ import java.util.TreeMap;
  * @author pwalser
  * @since 25.01.2018.
  */
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonSerialize(using = MetadataConverter.Serializer.class)
 @JsonDeserialize(using = MetadataConverter.Deserializer.class)
 public class Metadata {
