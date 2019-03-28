@@ -18,7 +18,6 @@ public final class ToStringSerializer extends StdSerializer<Object> {
         super(Object.class);
     }
 
-
     @Override
     public void serialize(Object value, JsonGenerator generator, SerializerProvider provider) throws IOException {
         if (value == null) {

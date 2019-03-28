@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.util.function.Function;
 
 /**
- * JSON serializer that uses a converter function to serialize a value to a string when the value is not null
- * (otherwise, <code>null</code> will be serialized).
+ * JSON serializer that uses a converter function to serialize a value to a string when the value is not null (otherwise, <code>null</code> will be
+ * serialized).
  *
  * @author pwalser
  * @since 25.01.2018

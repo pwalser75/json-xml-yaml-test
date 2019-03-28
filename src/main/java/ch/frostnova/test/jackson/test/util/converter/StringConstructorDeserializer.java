@@ -38,7 +38,6 @@ public abstract class StringConstructorDeserializer<T> extends StdDeserializer<T
         }
     }
 
-
     @Override
     public Object deserializeWithType(JsonParser p, DeserializationContext ctxt, TypeDeserializer typeDeserializer) throws IOException {
         return super.deserializeWithType(p, ctxt, typeDeserializer);
