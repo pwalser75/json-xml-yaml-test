@@ -35,7 +35,7 @@ public class AspectRatio {
     public AspectRatio(String formatted) {
 
         if (formatted == null) {
-            throw new IllegalArgumentException("Illegal aspect ratio: " + formatted);
+            throw new IllegalArgumentException("Aspect ratio is required");
         }
         Matcher matcher = PATTERN.matcher(formatted);
         if (!matcher.matches()) {

@@ -17,10 +17,9 @@ import java.util.Map;
  */
 public class JsonFormatTest {
 
-
     @Test
     public void testStringify() {
-        Assert.assertEquals(null, SerialFormat.json().stringify(null));
+        Assert.assertNull(SerialFormat.json().stringify(null));
         Assert.assertEquals("123", SerialFormat.json().stringify(123));
         Assert.assertEquals("\"456\"", SerialFormat.json().stringify("456"));
         Assert.assertEquals("true", SerialFormat.json().stringify(true));
@@ -41,7 +40,7 @@ public class JsonFormatTest {
 
     @Test
     public void testParse() {
-        Assert.assertEquals(null, SerialFormat.json().parse(Object.class, (String) null));
+        Assert.assertNull(SerialFormat.json().parse(Object.class, (String) null));
         Assert.assertEquals(Integer.valueOf(123), SerialFormat.json().parse(Integer.class, "123"));
         Assert.assertEquals("456", SerialFormat.json().parse(String.class, "\"456\""));
         Assert.assertEquals(Boolean.TRUE, SerialFormat.json().parse(Boolean.class, "true"));

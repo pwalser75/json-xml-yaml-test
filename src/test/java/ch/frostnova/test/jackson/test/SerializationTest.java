@@ -107,6 +107,11 @@ public class SerializationTest {
         Movie movie = Movie.create();
         int samples = 1000;
 
+        //warmup
+        for (int i = 0; i < 100; i++) {
+            format.serialize(movie);
+        }
+
         long time = System.nanoTime();
         for (int i = 0; i < samples; i++) {
             format.serialize(movie);

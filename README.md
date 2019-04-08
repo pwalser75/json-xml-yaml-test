@@ -16,7 +16,7 @@ Testing Jackson JSON/XML/YAML object mapping
 Serialized examples (`Movie` with `Actor`, `Genre`, `AspectRatio` and `Metadata`):
 
 ### JSON 
-894 bytes, 624 µS serialization, 500 µS deserialization
+894 bytes, 391 µS serialization, 469 µS deserialization
 
     {
       "title" : "Blade Runner",
@@ -53,7 +53,7 @@ Serialized examples (`Movie` with `Actor`, `Genre`, `AspectRatio` and `Metadata`
     }
 
 ### XML
-1008 bytes, 2538 µS serialization, 1810 µS deserialization
+1008 bytes, 1710 µS serialization, 1648 µS deserialization
 
     <movie>
       <ratings IMDB="8.2" Metacritic="89.0"/>
@@ -88,7 +88,7 @@ Serialized examples (`Movie` with `Actor`, `Genre`, `AspectRatio` and `Metadata`
     </movie>
 
 ### YAML
-646 bytes, 684 µS serialization, 964 µS deserialization
+646 bytes, 521 µS serialization, 650 µS deserialization
 
     title: Blade Runner
     year: 1982
@@ -122,7 +122,7 @@ Serialized examples (`Movie` with `Actor`, `Genre`, `AspectRatio` and `Metadata`
       screenplay: Hampton Fancher, David Webb Peoples
       
 ### CBOR (https://tools.ietf.org/html/rfc7049)
-591 bytes, 818 µS serialization, 559 µS deserialization
+591 bytes, 461 µS serialization, 522 µS deserialization
 
     BF 65 74 69 74 6C 65 6C 42 6C 61 64 65 20 52 75 6E 6E 65 72 64 79 65 61 72 19 07 BE 66 67 65 6E 
     72 65 73 82 66 53 63 69 2D 46 69 68 54 68 72 69 6C 6C 65 72 6C 61 73 70 65 63 74 2D 72 61 74 69 
