@@ -30,6 +30,7 @@ import java.util.function.Consumer;
 public class Movie {
 
     @JsonProperty("created")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JacksonXmlProperty(isAttribute = true, localName = "created")
     private ZonedDateTime created = ZonedDateTime.now().truncatedTo(ChronoUnit.SECONDS).withZoneSameInstant(ZoneId.of("UTC"));
 

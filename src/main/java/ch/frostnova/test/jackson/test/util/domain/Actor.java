@@ -47,11 +47,13 @@ public class Actor {
     }
 
     @JsonProperty(value = "dateOfBirth")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public LocalDate getBirthDate() {
         return birthDate;
     }
 
     @JsonProperty(value = "age", access = JsonProperty.Access.READ_ONLY)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JacksonXmlProperty(isAttribute = true)
     public Integer getAge() {
         if (birthDate == null) {
