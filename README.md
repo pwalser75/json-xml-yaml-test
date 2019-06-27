@@ -17,7 +17,7 @@ Testing Jackson JSON/XML/YAML object mapping
 Serialized examples (`Movie` with `Actor`, `Genre`, `AspectRatio` and `Metadata`):
 
 ### JSON 
-894 bytes, 5.54 µS serialization, 8.35 µS deserialization
+894 bytes, 5.54 µS serialization, 8.35 µS deserialization <br>
 With Afterburner: 5.09 µS serialization, 8.57 µS deserialization
 
     {
@@ -55,7 +55,7 @@ With Afterburner: 5.09 µS serialization, 8.57 µS deserialization
     }
 
 ### XML
-1008 bytes, 6.39 µS serialization, 16.38 µS deserialization
+1008 bytes, 6.39 µS serialization, 16.38 µS deserialization <br>
 With Afterburner: 6.3 µS serialization, 16.96 µS deserialization
 
     <movie>
@@ -91,7 +91,7 @@ With Afterburner: 6.3 µS serialization, 16.96 µS deserialization
     </movie>
 
 ### YAML
-646 bytes, 28.28 µS serialization, 56.31 µS deserialization
+646 bytes, 28.28 µS serialization, 56.31 µS deserialization <br>
 With Afterburner: 27.39 µS serialization, 52.61 µS deserialization
 
     title: Blade Runner
@@ -126,7 +126,7 @@ With Afterburner: 27.39 µS serialization, 52.61 µS deserialization
       screenplay: Hampton Fancher, David Webb Peoples
       
 ### CBOR (https://tools.ietf.org/html/rfc7049)
-591 bytes, 4.31 µS serialization, 6.78 µS deserialization
+591 bytes, 4.31 µS serialization, 6.78 µS deserialization <br>
 With Afterburner: 3.89 µS serialization, 7.17 µS deserialization
 
     BF 65 74 69 74 6C 65 6C 42 6C 61 64 65 20 52 75 6E 6E 65 72 64 79 65 61 72 19 07 BE 66 67 65 6E 
