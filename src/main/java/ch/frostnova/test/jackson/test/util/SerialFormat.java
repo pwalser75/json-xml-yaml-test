@@ -12,6 +12,7 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,14 +34,18 @@ import java.util.stream.Collectors;
  */
 public abstract class SerialFormat {
 
+    private final static boolean USE_JACKSON_AFTERBURNER = true;
+
     private static Map<Class<? extends SerialFormat>, SerialFormat> serialFormats = new HashMap<>();
 
     private final String name;
     private final boolean binary;
+    private final ObjectMapper objectMapper;
 
-    private SerialFormat(String name, boolean binary) {
+    private SerialFormat(String name, boolean binary, ObjectMapper objectMapper) {
         this.name = name;
         this.binary = binary;
+        this.objectMapper = objectMapper;
     }
 
     public String getName() {
@@ -167,7 +172,9 @@ public abstract class SerialFormat {
                 .lines().collect(Collectors.joining("\n"));
     }
 
-    protected abstract ObjectMapper objectMapper();
+    protected final ObjectMapper objectMapper() {
+        return objectMapper;
+    }
 
     public static JSON json() {
         return lazyGet(JSON.class, JSON::new);
@@ -197,11 +204,10 @@ public abstract class SerialFormat {
     public static class JSON extends SerialFormat {
 
         private JSON() {
-            super("JSON", false);
+            super("JSON", false, createObjectMapper());
         }
 
-        @Override
-        protected ObjectMapper objectMapper() {
+        private static ObjectMapper createObjectMapper() {
             ObjectMapper mapper = new ObjectMapper();
             mapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector());
             return configure(mapper);
@@ -211,11 +217,10 @@ public abstract class SerialFormat {
     public static class XML extends SerialFormat {
 
         private XML() {
-            super("XML", false);
+            super("XML", false, createObjectMapper());
         }
 
-        @Override
-        protected ObjectMapper objectMapper() {
+        private static ObjectMapper createObjectMapper() {
             JacksonXmlModule xmlModule = new JacksonXmlModule();
             xmlModule.setDefaultUseWrapper(false);
             XmlMapper mapper = new XmlMapper(xmlModule);
@@ -226,11 +231,10 @@ public abstract class SerialFormat {
     public static class YAML extends SerialFormat {
 
         private YAML() {
-            super("YAML", false);
+            super("YAML", false, createObjectMapper());
         }
 
-        @Override
-        protected ObjectMapper objectMapper() {
+        private static ObjectMapper createObjectMapper() {
             YAMLFactory yamlFactory = new YAMLFactory().enable(YAMLGenerator.Feature.MINIMIZE_QUOTES);
             ObjectMapper mapper = new ObjectMapper(yamlFactory);
             mapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector());
@@ -244,11 +248,10 @@ public abstract class SerialFormat {
     public static class CBOR extends SerialFormat {
 
         private CBOR() {
-            super("CBOR", true);
+            super("CBOR", true, createObjectMapper());
         }
 
-        @Override
-        protected ObjectMapper objectMapper() {
+        private static ObjectMapper createObjectMapper() {
             ObjectMapper mapper = new ObjectMapper(new CBORFactory());
             mapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector());
             return configure(mapper);
@@ -257,6 +260,9 @@ public abstract class SerialFormat {
 
     public static <T extends ObjectMapper> T configure(T mapper) {
         mapper.registerModule(new JavaTimeModule());
+        if (USE_JACKSON_AFTERBURNER) {
+            mapper.registerModule(new AfterburnerModule());
+        }
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         mapper.setDateFormat(new StdDateFormat());
         mapper.enable(SerializationFeature.INDENT_OUTPUT);

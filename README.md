@@ -10,13 +10,15 @@ Testing Jackson JSON/XML/YAML object mapping
 - custom serialization for **domain object** &rarr; `Metadata` with `MetadataConverter.Serializer` and `MetadataConverter.Deserializer`
 - custom serialization for **immutable value objects** with string constructor / `toString()` &rarr; `AspectRatio`
 - function-based custom serialization using `FunctionalSerializer` / `FunctionalDeserializer`
+- uses **Jackson Afterburner** (https://github.com/FasterXML/jackson-modules-base/tree/master/afterburner)
 
 ## Examples
 
 Serialized examples (`Movie` with `Actor`, `Genre`, `AspectRatio` and `Metadata`):
 
 ### JSON 
-894 bytes, 391 µS serialization, 469 µS deserialization
+894 bytes, 5.54 µS serialization, 8.35 µS deserialization
+With Afterburner: 5.09 µS serialization, 8.57 µS deserialization
 
     {
       "title" : "Blade Runner",
@@ -53,7 +55,8 @@ Serialized examples (`Movie` with `Actor`, `Genre`, `AspectRatio` and `Metadata`
     }
 
 ### XML
-1008 bytes, 1710 µS serialization, 1648 µS deserialization
+1008 bytes, 6.39 µS serialization, 16.38 µS deserialization
+With Afterburner: 6.3 µS serialization, 16.96 µS deserialization
 
     <movie>
       <ratings IMDB="8.2" Metacritic="89.0"/>
@@ -88,7 +91,8 @@ Serialized examples (`Movie` with `Actor`, `Genre`, `AspectRatio` and `Metadata`
     </movie>
 
 ### YAML
-646 bytes, 521 µS serialization, 650 µS deserialization
+646 bytes, 28.28 µS serialization, 56.31 µS deserialization
+With Afterburner: 27.39 µS serialization, 52.61 µS deserialization
 
     title: Blade Runner
     year: 1982
@@ -122,7 +126,8 @@ Serialized examples (`Movie` with `Actor`, `Genre`, `AspectRatio` and `Metadata`
       screenplay: Hampton Fancher, David Webb Peoples
       
 ### CBOR (https://tools.ietf.org/html/rfc7049)
-591 bytes, 461 µS serialization, 522 µS deserialization
+591 bytes, 4.31 µS serialization, 6.78 µS deserialization
+With Afterburner: 3.89 µS serialization, 7.17 µS deserialization
 
     BF 65 74 69 74 6C 65 6C 42 6C 61 64 65 20 52 75 6E 6E 65 72 64 79 65 61 72 19 07 BE 66 67 65 6E 
     72 65 73 82 66 53 63 69 2D 46 69 68 54 68 72 69 6C 6C 65 72 6C 61 73 70 65 63 74 2D 72 61 74 69 

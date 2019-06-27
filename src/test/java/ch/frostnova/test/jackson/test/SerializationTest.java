@@ -11,6 +11,8 @@ import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.text.DecimalFormat;
+
 /**
  * Test JSON / XML / YAML serialization
  *
@@ -18,6 +20,9 @@ import org.junit.Test;
  * @since 22.06.2018
  */
 public class SerializationTest {
+
+    private final static DecimalFormat NUMBER_FORMAT = new DecimalFormat("0.##");
+    private final static long benchmarkTimeMs = 1000;
 
     @Test
     public void testJSON() {
@@ -105,27 +110,41 @@ public class SerializationTest {
     private void benchmark(SerialFormat format) {
 
         Movie movie = Movie.create();
-        int samples = 1000;
+        long benchmarkTimeNs = benchmarkTimeMs * 1000000L;
 
         //warmup
         for (int i = 0; i < 100; i++) {
-            format.serialize(movie);
+            byte[] serialized = format.serialize(movie);
+            format.deserialize(Movie.class, serialized);
+        }
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
         long time = System.nanoTime();
-        for (int i = 0; i < samples; i++) {
+        long endTime = System.nanoTime() + benchmarkTimeNs;
+        long samples = 0;
+        while (System.nanoTime() < endTime) {
             format.serialize(movie);
+            samples++;
         }
         time = System.nanoTime() - time;
-        System.out.println((time / samples / 1000) + " µS serialization");
+        System.out.println(NUMBER_FORMAT.format(time / samples / 1000d) + " µS serialization (" + samples + " samples)");
 
         byte[] serialized = format.serialize(movie);
         time = System.nanoTime();
-        for (int i = 0; i < samples; i++) {
+
+        endTime = System.nanoTime() + benchmarkTimeNs;
+        samples = 0;
+        while (System.nanoTime() < endTime) {
             format.deserialize(Movie.class, serialized);
+            samples++;
         }
+
         time = System.nanoTime() - time;
-        System.out.println((time / samples / 1000) + " µS deserialization");
+        System.out.println(NUMBER_FORMAT.format(time / samples / 1000d) + " µS deserialization (" + samples + " samples)");
     }
 
     private void verifyParsed(Movie original, Movie parsed) {
