@@ -23,9 +23,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <junitVersion>4.12</junitVersion>
-        <mockitoVersion>2.23.4</mockitoVersion>
-        <jacksonVersion>2.9.8</jacksonVersion>
-        <slf4jVersion>1.7.25</slf4jVersion>
+        <mockitoVersion>2.28.2</mockitoVersion>
+        <jacksonVersion>2.9.9</jacksonVersion>
+        <slf4jVersion>1.7.26</slf4jVersion>
         <logbackVersion>1.2.3</logbackVersion>
     </properties>
 
@@ -83,6 +83,11 @@
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>${jacksonVersion}</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-afterburner</artifactId>
+            <version>${jacksonVersion}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
