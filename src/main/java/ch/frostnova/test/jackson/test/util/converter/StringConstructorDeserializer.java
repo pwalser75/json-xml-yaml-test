@@ -6,9 +6,7 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.jsontype.TypeDeserializer;
 
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 
 /**
  * Deserializer for value objects (using <code>String</code> constructor: <code>new T(String value)</code>).
@@ -53,6 +51,7 @@ public abstract class StringConstructorDeserializer<T> extends StdDeserializer<T
         try {
             return constructor.newInstance(string);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException ex) {
+            ex.getCause().printStackTrace();
             throw new IOException("Failed to deserialize value '" + string + "' to " + constructor.getDeclaringClass().getName() + ": " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
         }
     }

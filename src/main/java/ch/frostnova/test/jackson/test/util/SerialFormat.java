@@ -1,28 +1,20 @@
 package ch.frostnova.test.jackson.test.util;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
 import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
-import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
+import com.fasterxml.jackson.dataformat.xml.*;
+import com.fasterxml.jackson.dataformat.yaml.*;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
+import com.jasonclawson.jackson.dataformat.hocon.HoconFactory;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -46,6 +38,53 @@ public abstract class SerialFormat {
         this.name = name;
         this.binary = binary;
         this.objectMapper = objectMapper;
+    }
+
+    private static String read(InputStream in) {
+
+        return new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))
+                .lines().collect(Collectors.joining("\n"));
+    }
+
+    public static JSON json() {
+        return lazyGet(JSON.class, JSON::new);
+    }
+
+    public static XML xml() {
+        return lazyGet(XML.class, XML::new);
+    }
+
+    public static YAML yaml() {
+        return lazyGet(YAML.class, YAML::new);
+    }
+
+    public static CBOR cbor() {
+        return lazyGet(CBOR.class, CBOR::new);
+    }
+
+    public static HOCON hocon() {
+        return lazyGet(HOCON.class, HOCON::new);
+    }
+
+    private static <F extends SerialFormat> F lazyGet(Class<F> format, Supplier<F> factory) {
+
+        return Optional.ofNullable(serialFormats.get(format)).map(format::cast).orElseGet(() -> {
+            F instance = factory.get();
+            serialFormats.put(format, instance);
+            return instance;
+        });
+    }
+
+    public static <T extends ObjectMapper> T configure(T mapper) {
+        mapper.registerModule(new JavaTimeModule());
+        if (USE_JACKSON_AFTERBURNER) {
+            mapper.registerModule(new AfterburnerModule());
+        }
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        mapper.setDateFormat(new StdDateFormat());
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        return mapper;
     }
 
     public String getName() {
@@ -166,39 +205,8 @@ public abstract class SerialFormat {
         }
     }
 
-    private static String read(InputStream in) {
-
-        return new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))
-                .lines().collect(Collectors.joining("\n"));
-    }
-
     protected final ObjectMapper objectMapper() {
         return objectMapper;
-    }
-
-    public static JSON json() {
-        return lazyGet(JSON.class, JSON::new);
-    }
-
-    public static XML xml() {
-        return lazyGet(XML.class, XML::new);
-    }
-
-    public static YAML yaml() {
-        return lazyGet(YAML.class, YAML::new);
-    }
-
-    public static CBOR cbor() {
-        return lazyGet(CBOR.class, CBOR::new);
-    }
-
-    private static <F extends SerialFormat> F lazyGet(Class<F> format, Supplier<F> factory) {
-
-        return Optional.ofNullable(serialFormats.get(format)).map(format::cast).orElseGet(() -> {
-            F instance = factory.get();
-            serialFormats.put(format, instance);
-            return instance;
-        });
     }
 
     public static class JSON extends SerialFormat {
@@ -210,7 +218,7 @@ public abstract class SerialFormat {
         private static ObjectMapper createObjectMapper() {
             ObjectMapper mapper = new ObjectMapper();
             mapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector());
-            return configure(mapper);
+            return SerialFormat.configure(mapper);
         }
     }
 
@@ -224,7 +232,7 @@ public abstract class SerialFormat {
             JacksonXmlModule xmlModule = new JacksonXmlModule();
             xmlModule.setDefaultUseWrapper(false);
             XmlMapper mapper = new XmlMapper(xmlModule);
-            return configure(mapper);
+            return SerialFormat.configure(mapper);
         }
     }
 
@@ -238,7 +246,23 @@ public abstract class SerialFormat {
             YAMLFactory yamlFactory = new YAMLFactory().enable(YAMLGenerator.Feature.MINIMIZE_QUOTES);
             ObjectMapper mapper = new ObjectMapper(yamlFactory);
             mapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector());
-            return configure(mapper);
+            return SerialFormat.configure(mapper);
+        }
+    }
+
+    /**
+     * HOCON = Human-Optimized Config Object Notation
+     */
+    public static class HOCON extends SerialFormat {
+
+        private HOCON() {
+            super("HOCON", true, createObjectMapper());
+        }
+
+        private static ObjectMapper createObjectMapper() {
+            ObjectMapper mapper = new ObjectMapper(new HoconFactory());
+            mapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector());
+            return SerialFormat.configure(mapper);
         }
     }
 
@@ -254,19 +278,7 @@ public abstract class SerialFormat {
         private static ObjectMapper createObjectMapper() {
             ObjectMapper mapper = new ObjectMapper(new CBORFactory());
             mapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector());
-            return configure(mapper);
+            return SerialFormat.configure(mapper);
         }
-    }
-
-    public static <T extends ObjectMapper> T configure(T mapper) {
-        mapper.registerModule(new JavaTimeModule());
-        if (USE_JACKSON_AFTERBURNER) {
-            mapper.registerModule(new AfterburnerModule());
-        }
-        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        mapper.setDateFormat(new StdDateFormat());
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-        return mapper;
     }
 }

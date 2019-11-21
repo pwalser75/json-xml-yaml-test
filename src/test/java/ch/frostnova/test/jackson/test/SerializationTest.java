@@ -1,15 +1,12 @@
 package ch.frostnova.test.jackson.test;
 
-import ch.frostnova.test.jackson.test.util.CollectionUtil;
-import ch.frostnova.test.jackson.test.util.SerialFormat;
+import ch.frostnova.test.jackson.test.util.*;
 import ch.frostnova.test.jackson.test.util.domain.Movie;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
-import com.fasterxml.jackson.dataformat.csv.CsvMapper;
-import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-import org.junit.Assert;
-import org.junit.Test;
+import com.fasterxml.jackson.dataformat.csv.*;
+import org.junit.*;
 
 import java.text.DecimalFormat;
 
@@ -42,6 +39,12 @@ public class SerializationTest {
     @Test
     public void testCBOR() {
         test(SerialFormat.cbor());
+    }
+
+    @Test
+    @Ignore // Generating HOCON is not supported yet by library
+    public void testHOCON() {
+        test(SerialFormat.hocon());
     }
 
     @Test

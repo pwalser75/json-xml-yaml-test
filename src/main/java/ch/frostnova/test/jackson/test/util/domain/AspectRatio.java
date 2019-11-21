@@ -1,14 +1,11 @@
 package ch.frostnova.test.jackson.test.util.domain;
 
-import ch.frostnova.test.jackson.test.util.converter.StringConstructorDeserializer;
-import ch.frostnova.test.jackson.test.util.converter.ToStringSerializer;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import ch.frostnova.test.jackson.test.util.converter.*;
+import com.fasterxml.jackson.databind.annotation.*;
 
-import java.text.DecimalFormat;
-import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.text.*;
+import java.util.*;
+import java.util.regex.*;
 
 /**
  * Value object: an aspect ratio
@@ -20,15 +17,8 @@ import java.util.regex.Pattern;
 @JsonDeserialize(using = AspectRatio.AspectRatioDeserializer.class)
 public class AspectRatio {
 
-    static class AspectRatioDeserializer extends StringConstructorDeserializer<AspectRatio> {
-        public AspectRatioDeserializer() {
-            super(AspectRatio.class);
-        }
-    }
-
     private final static Pattern PATTERN = Pattern.compile("\\s*(\\d+(?:\\.\\d+)?)\\s*:\\s*(\\d+(?:\\.\\d+)?)\\s*");
-    private final static DecimalFormat numberFormat = new DecimalFormat("0.##");
-
+    private final static DecimalFormat numberFormat = new DecimalFormat("0.##", new DecimalFormatSymbols(Locale.US));
     private double width;
     private double height;
 
@@ -93,5 +83,11 @@ public class AspectRatio {
     @Override
     public String toString() {
         return numberFormat.format(width) + ":" + numberFormat.format(height);
+    }
+
+    static class AspectRatioDeserializer extends StringConstructorDeserializer<AspectRatio> {
+        public AspectRatioDeserializer() {
+            super(AspectRatio.class);
+        }
     }
 }
