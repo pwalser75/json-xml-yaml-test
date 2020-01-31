@@ -56,20 +56,20 @@ dependencyUpdates.resolutionStrategy = {
 
 
 ext {
-    junitVersion = '4.12'
-    mockitoVersion = '3.1.0'
-    jacksonVersion = '2.10.1'
-    slf4jVersion = '1.7.29'
+    junitVersion = '4.13'
+    mockitoVersion = '3.2.4'
+    jacksonVersion = '2.10.2'
+    slf4jVersion = '1.7.30'
     logbackVersion = '1.2.3'
     hoconJacksonVersion = '1.1.1'
 
     libs = [
             jackson    : [
-                "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}",
-                "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}",
-                "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}",
-                "com.fasterxml.jackson.module:jackson-module-afterburner:${jacksonVersion}"
-        ],
+                    "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}",
+                    "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}",
+                    "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}",
+                    "com.fasterxml.jackson.module:jackson-module-afterburner:${jacksonVersion}"
+            ],
             xml        : [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:${jacksonVersion}"
         ],
