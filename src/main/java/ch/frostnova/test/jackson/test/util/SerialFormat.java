@@ -76,14 +76,19 @@ public abstract class SerialFormat {
     }
 
     public static <T extends ObjectMapper> T configure(T mapper) {
-        mapper.registerModule(new JavaTimeModule());
+
         if (USE_JACKSON_AFTERBURNER) {
             mapper.registerModule(new AfterburnerModule());
         }
-        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        mapper.setDateFormat(new StdDateFormat());
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        mapper.registerModule(new JavaTimeModule())
+                .setDateFormat(new StdDateFormat())
+                .enable(SerializationFeature.INDENT_OUTPUT)
+                .enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
+                .enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
+                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                .disable(SerializationFeature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED)
+                .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                .setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
         return mapper;
     }
 
