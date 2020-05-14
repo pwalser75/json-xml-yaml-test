@@ -23,8 +23,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <junitVersion>4.13</junitVersion>
-        <mockitoVersion>3.2.4</mockitoVersion>
-        <jacksonVersion>2.10.2</jacksonVersion>
+        <mockitoVersion>3.3.3</mockitoVersion>
+        <jacksonVersion>2.11.0</jacksonVersion>
         <slf4jVersion>1.7.30</slf4jVersion>
         <logbackVersion>1.2.3</logbackVersion>
         <hoconJacksonVersion>1.1.1</hoconJacksonVersion>
