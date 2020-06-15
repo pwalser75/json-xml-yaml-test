@@ -10,6 +10,7 @@ Testing Jackson JSON/XML/YAML object mapping
 - custom serialization for **domain object** &rarr; `Metadata` with `MetadataConverter.Serializer` and `MetadataConverter.Deserializer`
 - custom serialization for **immutable value objects** with string constructor / `toString()` &rarr; `AspectRatio`
 - function-based custom serialization using `FunctionalSerializer` / `FunctionalDeserializer`
+- NEW: JSON schema and validation example
 
 ## Examples
 
