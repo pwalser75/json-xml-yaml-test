@@ -4,7 +4,9 @@ import ch.frostnova.test.jackson.test.util.CollectionUtil;
 import ch.frostnova.test.jackson.test.util.SerialFormat;
 import ch.frostnova.test.jackson.test.util.domain.Movie;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MappingIterator;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
@@ -168,6 +170,15 @@ public class SerializationTest {
         for (String key : original.getMetadata().getKeys()) {
             Assert.assertEquals(original.getMetadata().get(key).get(), parsed.getMetadata().get(key).get());
         }
+        try {
 
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode one = objectMapper.readTree(objectMapper.writeValueAsString(original));
+            JsonNode two = objectMapper.readTree(objectMapper.writeValueAsString(parsed));
+            Assert.assertEquals(one, two);
+
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
     }
 }

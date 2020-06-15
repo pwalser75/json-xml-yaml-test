@@ -90,36 +90,72 @@ public class Movie {
         return created;
     }
 
+    public void setCreated(ZonedDateTime created) {
+        this.created = created;
+    }
+
     public String getTitle() {
         return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public int getYear() {
         return year;
     }
 
+    public void setYear(int year) {
+        this.year = year;
+    }
+
     public List<Genre> getGenres() {
         return genres;
+    }
+
+    public void setGenres(List<Genre> genres) {
+        this.genres = genres;
     }
 
     public Map<String, Number> getRatings() {
         return ratings;
     }
 
+    public void setRatings(Map<String, Number> ratings) {
+        this.ratings = ratings;
+    }
+
     public String getSynopsis() {
         return synopsis;
+    }
+
+    public void setSynopsis(String synopsis) {
+        this.synopsis = synopsis;
     }
 
     public List<Actor> getActors() {
         return actors;
     }
 
+    public void setActors(List<Actor> actors) {
+        this.actors = actors;
+    }
+
     public AspectRatio getAspectRatio() {
         return aspectRatio;
     }
 
+    public void setAspectRatio(AspectRatio aspectRatio) {
+        this.aspectRatio = aspectRatio;
+    }
+
     public Metadata getMetadata() {
         return metadata;
+    }
+
+    public void setMetadata(Metadata metadata) {
+        this.metadata = metadata;
     }
 
     public static Builder builder() {
