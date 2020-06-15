@@ -3,7 +3,7 @@
   "definitions": {
     "name": {
       "type": "string",
-      "pattern": "\\S+"
+      "pattern": "^\\p{Lu}\\p{Ll}+$"
     },
     "date": {
       "type": "string",

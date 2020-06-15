@@ -1,5 +1,5 @@
 {
-  "year": -3,
+  "year": 3.14159265,
   "genres": [
     123
   ],
@@ -14,6 +14,11 @@
       "firstName": "?",
       "dateOfBirth": "1942-42-13",
       "age": -77
+    },
+    {
+      "firstName": "Fränk",
+      "lastName": "dREBIN",
+      "likes": "Steak"
     }
   ],
   "metadata": {
