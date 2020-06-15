@@ -59,7 +59,7 @@ ext {
     slf4jVersion = '1.7.30'
     logbackVersion = '1.2.3'
     hoconJacksonVersion = '1.1.1'
-    jsonSchemaValidatorVersion = '2.2.14'
+    jsonSchemaValidatorVersion = '1.5.1'
 
     libs = [
             jackson    : [
@@ -72,7 +72,7 @@ ext {
             cbor       : "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:${jacksonVersion}",
             hocon      : "org.honton.chas.hocon:jackson-dataformat-hocon:${hoconJacksonVersion}",
             csv        : "com.fasterxml.jackson.dataformat:jackson-dataformat-csv:${jacksonVersion}",
-            jsonSchema : "com.github.java-json-tools:json-schema-validator:${jsonSchemaValidatorVersion}",
+            jsonSchema : "org.everit.json:org.everit.json.schema:${jsonSchemaValidatorVersion}",
             testbase   : [
                     "junit:junit:${junitVersion}",
                     "org.mockito:mockito-core:${mockitoVersion}"

@@ -2,74 +2,68 @@ package ch.frostnova.test.jackson.test;
 
 import ch.frostnova.test.jackson.test.util.SerialFormat;
 import ch.frostnova.test.jackson.test.util.domain.Movie;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.github.fge.jsonschema.core.exceptions.ProcessingException;
-import com.github.fge.jsonschema.core.report.ProcessingMessage;
-import com.github.fge.jsonschema.core.report.ProcessingReport;
-import com.github.fge.jsonschema.main.JsonSchema;
-import com.github.fge.jsonschema.main.JsonSchemaFactory;
+import org.everit.json.schema.Schema;
+import org.everit.json.schema.ValidationException;
+import org.everit.json.schema.loader.SchemaLoader;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class SchemaValidationTest {
 
-    private JsonSchema getSchema() throws IOException, ProcessingException {
-        JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
-        URL schemaURL = getClass().getResource("/Movie.schema.json");
-        JsonNode schemaNode = SerialFormat.json().parseTree(schemaURL);
-        return factory.getJsonSchema(schemaNode);
+    private Schema getSchema() {
+        JSONObject jsonSchema = new JSONObject(new JSONTokener(getClass().getResourceAsStream("/Movie.schema.json")));
+
+        SchemaLoader loader = SchemaLoader.builder()
+                .schemaJson(jsonSchema)
+                .build();
+        return loader.load().build();
     }
 
     @Test
-    public void testSchemaValidation() throws Exception {
+    public void testSchemaValidation() {
 
         Movie movie = Movie.create();
         String json = SerialFormat.json().stringify(movie);
-        JsonNode root = SerialFormat.json().parseTree(json);
+        JSONObject root = new JSONObject(new JSONTokener(json));
 
-        ProcessingReport report = getSchema().validate(root, true);
-        assertTrue(report.isSuccess());
+        getSchema().validate(root);
     }
 
     @Test
-    public void testSchemaValidationValid() throws Exception {
-        URL resource = getClass().getResource("/test-data/movie-valid.json");
-        JsonNode root = SerialFormat.json().parseTree(resource);
-
-        ProcessingReport report = getSchema().validate(root, true);
-        assertTrue(report.isSuccess());
+    public void testSchemaValidationValid() {
+        JSONObject root = new JSONObject(new JSONTokener(getClass().getResourceAsStream("/test-data/movie-valid.json")));
+        getSchema().validate(root);
     }
 
     @Test
-    public void testSchemaValidationInvalid() throws Exception {
-        URL resource = getClass().getResource("/test-data/movie-invalid.json");
-        JsonNode root = SerialFormat.json().parseTree(resource);
+    public void testSchemaValidationInvalid() {
+        JSONObject root = new JSONObject(new JSONTokener(getClass().getResourceAsStream("/test-data/movie-invalid.json")));
 
-        ProcessingReport report = getSchema().validate(root, true);
-        Set<String> validationMessages = new HashSet<>();
-        for (ProcessingMessage processingMessage : report) {
-            validationMessages.add(processingMessage.getMessage());
+        try {
+            getSchema().validate(root);
+            Assert.fail("Expected ValidationException");
+        } catch (ValidationException ex) {
+            ex.getAllMessages().forEach(m -> System.out.println(m));
+
+            Set<String> validationMessages = ex.getAllMessages().stream().map(String::valueOf).collect(Collectors.toSet());
+            assertTrue(validationMessages.contains("#/metadata/something: expected type: String, found: Boolean"));
+            assertTrue(validationMessages.contains("#/aspect-ratio: string [555] does not match pattern ^\\d+(\\.\\d+)?\\:\\d+(\\.\\d+)?$"));
+            assertTrue(validationMessages.contains("#/year: -3.0 is not higher or equal to 0"));
+            assertTrue(validationMessages.contains("#/genres/0: expected type: String, found: Integer"));
+            assertTrue(validationMessages.contains("#/created: [yesterday] is not a valid date-time. Expected [yyyy-MM-dd'T'HH:mm:ssZ, yyyy-MM-dd'T'HH:mm:ss.[0-9]{1,9}Z]"));
+            assertTrue(validationMessages.contains("#/ratings/IMDB: -8.2 is not higher or equal to 0"));
+            assertTrue(validationMessages.contains("#: required key [title] not found"));
+            assertTrue(validationMessages.contains("#: extraneous key [nobodyExpects] is not permitted"));
+            assertTrue(validationMessages.contains("#/actors/0/dateOfBirth: string [1942-42-13] does not match pattern \\d{4}-(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|[1-2][0-9]|3[0-1])"));
+            assertTrue(validationMessages.contains("#/actors/0/age: -77.0 is not higher or equal to 0"));
+            assertTrue(validationMessages.contains("#/actors/0: required key [lastName] not found"));
         }
-        assertFalse(report.isSuccess());
-
-        assertTrue(validationMessages.contains("object instance has properties which are not allowed by the schema: [\"nobodyExpects\"]"));
-        assertTrue(validationMessages.contains("object has missing required properties ([\"title\"])"));
-        assertTrue(validationMessages.contains("object has missing required properties ([\"lastName\"])"));
-        assertTrue(validationMessages.contains("numeric instance is lower than the required minimum (minimum: 0, found: -77)"));
-        assertTrue(validationMessages.contains("ECMA 262 regex \"\\d{4}-(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|[1-2][0-9]|3[0-1])\" does not match input string \"1942-42-13\""));
-        assertTrue(validationMessages.contains("ECMA 262 regex \"^\\d+(\\.\\d+)?\\:\\d+(\\.\\d+)?$\" does not match input string \"555\""));
-        assertTrue(validationMessages.contains("string \"yesterday\" is invalid against requested date format(s) [yyyy-MM-dd'T'HH:mm:ssZ, yyyy-MM-dd'T'HH:mm:ss.[0-9]{1,12}Z]"));
-        assertTrue(validationMessages.contains("instance type (integer) does not match any allowed primitive type (allowed: [\"string\"])"));
-        assertTrue(validationMessages.contains("instance type (boolean) does not match any allowed primitive type (allowed: [\"string\"])"));
-        assertTrue(validationMessages.contains("numeric instance is lower than the required minimum (minimum: 0, found: -8.2)"));
-        assertTrue(validationMessages.contains("numeric instance is lower than the required minimum (minimum: 0, found: -3)"));
-
-        assertEquals(11, validationMessages.size());
     }
 }

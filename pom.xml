@@ -28,7 +28,7 @@
         <slf4jVersion>1.7.30</slf4jVersion>
         <logbackVersion>1.2.3</logbackVersion>
         <hoconJacksonVersion>1.1.1</hoconJacksonVersion>
-        <jsonSchemaValidatorVersion>2.2.14</jsonSchemaValidatorVersion>
+        <jsonSchemaValidatorVersion>1.5.1</jsonSchemaValidatorVersion>
     </properties>
 
     <dependencies>
@@ -112,8 +112,8 @@
             <version>${hoconJacksonVersion}</version>
         </dependency>
         <dependency>
-            <groupId>com.github.java-json-tools</groupId>
-            <artifactId>json-schema-validator</artifactId>
+            <groupId>org.everit.json</groupId>
+            <artifactId>org.everit.json.schema</artifactId>
             <version>${jsonSchemaValidatorVersion}</version>
         </dependency>
     </dependencies>
