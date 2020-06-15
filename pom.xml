@@ -28,6 +28,7 @@
         <slf4jVersion>1.7.30</slf4jVersion>
         <logbackVersion>1.2.3</logbackVersion>
         <hoconJacksonVersion>1.1.1</hoconJacksonVersion>
+        <jsonSchemaValidatorVersion>2.2.14</jsonSchemaValidatorVersion>
     </properties>
 
     <dependencies>
@@ -86,11 +87,6 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.module</groupId>
-            <artifactId>jackson-module-afterburner</artifactId>
-            <version>${jacksonVersion}</version>
-        </dependency>
-        <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
             <version>${jacksonVersion}</version>
@@ -114,6 +110,11 @@
             <groupId>org.honton.chas.hocon</groupId>
             <artifactId>jackson-dataformat-hocon</artifactId>
             <version>${hoconJacksonVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.java-json-tools</groupId>
+            <artifactId>json-schema-validator</artifactId>
+            <version>${jsonSchemaValidatorVersion}</version>
         </dependency>
     </dependencies>
 

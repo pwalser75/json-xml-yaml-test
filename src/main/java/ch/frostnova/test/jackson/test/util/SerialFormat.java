@@ -1,20 +1,29 @@
 package ch.frostnova.test.jackson.test.util;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
 import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
-import com.fasterxml.jackson.dataformat.xml.*;
-import com.fasterxml.jackson.dataformat.yaml.*;
+import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import com.jasonclawson.jackson.dataformat.hocon.HoconFactory;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -25,8 +34,6 @@ import java.util.stream.Collectors;
  * @since 27.06.2018
  */
 public abstract class SerialFormat {
-
-    private final static boolean USE_JACKSON_AFTERBURNER = true;
 
     private static Map<Class<? extends SerialFormat>, SerialFormat> serialFormats = new HashMap<>();
 
@@ -41,7 +48,6 @@ public abstract class SerialFormat {
     }
 
     private static String read(InputStream in) {
-
         return new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))
                 .lines().collect(Collectors.joining("\n"));
     }
@@ -76,10 +82,6 @@ public abstract class SerialFormat {
     }
 
     public static <T extends ObjectMapper> T configure(T mapper) {
-
-        if (USE_JACKSON_AFTERBURNER) {
-            mapper.registerModule(new AfterburnerModule());
-        }
         mapper.registerModule(new JavaTimeModule())
                 .setDateFormat(new StdDateFormat())
                 .enable(SerializationFeature.INDENT_OUTPUT)
@@ -210,7 +212,7 @@ public abstract class SerialFormat {
         }
     }
 
-    protected final ObjectMapper objectMapper() {
+    public final ObjectMapper objectMapper() {
         return objectMapper;
     }
 

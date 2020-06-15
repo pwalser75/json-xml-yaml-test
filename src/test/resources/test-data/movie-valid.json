@@ -1,0 +1,40 @@
+{
+  "title": "Blade Runner",
+  "year": 1982,
+  "genres": [
+    "Sci-Fi",
+    "Thriller"
+  ],
+  "aspect-ratio": "2.39:1",
+  "created": "2020-06-15T10:08:25Z",
+  "ratings": {
+    "IMDB": 8.2,
+    "Metacritic": 89.0
+  },
+  "synopsis": "A blade runner must pursue and terminate four replicants\n who stole a ship in space and have returned to Earth to find their creator.",
+  "actors": [
+    {
+      "firstName": "Harrison",
+      "lastName": "Ford",
+      "dateOfBirth": "1942-07-13",
+      "age": 77
+    },
+    {
+      "firstName": "Rutger",
+      "lastName": "Hauer",
+      "dateOfBirth": "1944-01-23",
+      "age": 76
+    },
+    {
+      "firstName": "Sean",
+      "lastName": "Young",
+      "dateOfBirth": "1959-11-20",
+      "age": 60
+    }
+  ],
+  "metadata": {
+    "director": "Ridley Scott",
+    "release-date": "1982-06-25",
+    "screenplay": "Hampton Fancher, David Webb Peoples"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "year": -3,
+  "genres": [
+    123
+  ],
+  "aspect-ratio": "555",
+  "created": "yesterday",
+  "ratings": {
+    "IMDB": -8.2
+  },
+  "synopsis": "",
+  "actors": [
+    {
+      "firstName": "?",
+      "dateOfBirth": "1942-42-13",
+      "age": -77
+    }
+  ],
+  "metadata": {
+    "something": true
+  },
+  "nobodyExpects": "the Spanish Inquisition"
+}

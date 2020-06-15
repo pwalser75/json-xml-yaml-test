@@ -59,42 +59,33 @@ ext {
     slf4jVersion = '1.7.30'
     logbackVersion = '1.2.3'
     hoconJacksonVersion = '1.1.1'
+    jsonSchemaValidatorVersion = '2.2.14'
 
     libs = [
             jackson    : [
                     "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}",
                     "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}",
-                    "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}",
-                    "com.fasterxml.jackson.module:jackson-module-afterburner:${jacksonVersion}"
+                    "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
             ],
-            xml        : [
-                "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:${jacksonVersion}"
-        ],
-            yaml       : [
-                "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}"
-        ],
-            cbor       : [
-                "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:${jacksonVersion}"
-        ],
-            hocon      : [
-                    "org.honton.chas.hocon:jackson-dataformat-hocon:${hoconJacksonVersion}"
-            ],
-            csv        : [
-                "com.fasterxml.jackson.dataformat:jackson-dataformat-csv:${jacksonVersion}"
-        ],
+            xml        : "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:${jacksonVersion}",
+            yaml       : "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}",
+            cbor       : "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:${jacksonVersion}",
+            hocon      : "org.honton.chas.hocon:jackson-dataformat-hocon:${hoconJacksonVersion}",
+            csv        : "com.fasterxml.jackson.dataformat:jackson-dataformat-csv:${jacksonVersion}",
+            jsonSchema : "com.github.java-json-tools:json-schema-validator:${jsonSchemaValidatorVersion}",
             testbase   : [
-                "junit:junit:${junitVersion}",
-                "org.mockito:mockito-core:${mockitoVersion}"
-        ],
+                    "junit:junit:${junitVersion}",
+                    "org.mockito:mockito-core:${mockitoVersion}"
+            ],
             loggingAPI : [
-                "org.slf4j:slf4j-api:${slf4jVersion}"
-        ],
+                    "org.slf4j:slf4j-api:${slf4jVersion}"
+            ],
             loggingImpl: [
-                "org.slf4j:jcl-over-slf4j:${slf4jVersion}",
-                "org.slf4j:jul-to-slf4j:${slf4jVersion}",
-                "ch.qos.logback:logback-classic:${logbackVersion}"
-        ]
-	]
+                    "org.slf4j:jcl-over-slf4j:${slf4jVersion}",
+                    "org.slf4j:jul-to-slf4j:${slf4jVersion}",
+                    "ch.qos.logback:logback-classic:${logbackVersion}"
+            ]
+    ]
 }
 
 dependencies {
@@ -104,6 +95,7 @@ dependencies {
     compile libs.cbor
     compile libs.hocon
     compile libs.csv
+    compile libs.jsonSchema
     compile libs.loggingAPI
     compile libs.loggingImpl
 

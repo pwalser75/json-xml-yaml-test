@@ -23,7 +23,7 @@ import java.text.DecimalFormat;
 public class SerializationTest {
 
     private final static DecimalFormat NUMBER_FORMAT = new DecimalFormat("0.##");
-    private final static long benchmarkTimeMs = 1000;
+    private final static long benchmarkTimeMs = 500;
 
     @Test
     public void testJSON() {
