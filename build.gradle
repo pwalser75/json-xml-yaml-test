@@ -1,16 +1,10 @@
-defaultTasks 'clean', 'build'
-
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.28.0'
-    }
+plugins {
+    id 'java'
+    id 'com.github.ben-manes.versions' version '0.38.0'
 }
-
 apply plugin: 'java'
-apply plugin: 'com.github.ben-manes.versions'
+
+defaultTasks 'clean', 'build'
 
 description = 'JSON/XML/YAML Test'
 group = 'ch.frostnova.test'
@@ -20,25 +14,8 @@ repositories {
     jcenter()
 }
 
-compileJava.options.encoding = 'UTF-8'
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-}
-
-def dateTimeFormat = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-def buildDate = java.time.LocalDateTime.now()
-
-jar {
-    manifest {
-        attributes(
-                "Name": project.name,
-                "Version": project.version,
-                "Build-Date": dateTimeFormat.format(buildDate)
-        )
-    }
-}
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
 
 def isNonStable = { String version ->
     def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { it -> version.toUpperCase().contains(it) }
@@ -53,9 +30,10 @@ dependencyUpdates {
 }
 
 ext {
-    junitVersion = '4.13'
-    mockitoVersion = '3.3.3'
-    jacksonVersion = '2.11.0'
+    junitVersion = '4.13.2'
+    assertjVersion = '3.19.0'
+    mockitoVersion = '3.8.0'
+    jacksonVersion = '2.12.3'
     slf4jVersion = '1.7.30'
     logbackVersion = '1.2.3'
     hoconJacksonVersion = '1.1.1'
@@ -70,11 +48,12 @@ ext {
             xml        : "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:${jacksonVersion}",
             yaml       : "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}",
             cbor       : "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:${jacksonVersion}",
-            hocon      : "org.honton.chas.hocon:jackson-dataformat-hocon:${hoconJacksonVersion}",
             csv        : "com.fasterxml.jackson.dataformat:jackson-dataformat-csv:${jacksonVersion}",
+            properties : "com.fasterxml.jackson.dataformat:jackson-dataformat-properties:${jacksonVersion}",
             jsonSchema : "org.everit.json:org.everit.json.schema:${jsonSchemaValidatorVersion}",
             testbase   : [
                     "junit:junit:${junitVersion}",
+                    "org.assertj:assertj-core:${assertjVersion}",
                     "org.mockito:mockito-core:${mockitoVersion}"
             ],
             loggingAPI : [
@@ -89,15 +68,15 @@ ext {
 }
 
 dependencies {
-    compile libs.jackson
-    compile libs.xml
-    compile libs.yaml
-    compile libs.cbor
-    compile libs.hocon
-    compile libs.csv
-    compile libs.jsonSchema
-    compile libs.loggingAPI
-    compile libs.loggingImpl
+    implementation libs.jackson
+    implementation libs.xml
+    implementation libs.yaml
+    implementation libs.cbor
+    implementation libs.properties
+    implementation libs.csv
+    implementation libs.jsonSchema
+    implementation libs.loggingAPI
+    implementation libs.loggingImpl
 
-    testCompile libs.testbase
+    testImplementation libs.testbase
 }

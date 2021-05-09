@@ -1,23 +1,23 @@
 package ch.frostnova.test.jackson.test;
 
-import ch.frostnova.test.jackson.test.util.CollectionUtil;
-import ch.frostnova.test.jackson.test.util.SerialFormat;
+import ch.frostnova.test.jackson.test.util.ObjectMappers;
 import ch.frostnova.test.jackson.test.util.domain.Movie;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.text.DecimalFormat;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
- * Test JSON / XML / YAML serialization
+ * Test JSON / YAML / XML / CBOR / Properties serialization
  *
  * @author pwalser
  * @since 22.06.2018
@@ -28,33 +28,32 @@ public class SerializationTest {
     private final static long benchmarkTimeMs = 500;
 
     @Test
-    public void testJSON() {
-        test(SerialFormat.json());
+    public void testJSON() throws IOException {
+        testFormat("JSON", ObjectMappers.json(), false);
     }
 
     @Test
-    public void testXML() {
-        test(SerialFormat.xml());
+    public void testYAML() throws IOException {
+        testFormat("YAML", ObjectMappers.yaml(), false);
     }
 
     @Test
-    public void testYAML() {
-        test(SerialFormat.yaml());
+    public void testXML() throws IOException {
+        testFormat("XML", ObjectMappers.xml(), false);
     }
 
     @Test
-    public void testCBOR() {
-        test(SerialFormat.cbor());
+    public void testCBOR() throws IOException {
+        testFormat("CBOR", ObjectMappers.cbor(), true);
     }
 
     @Test
-    @Ignore // Generating HOCON is not supported yet by library
-    public void testHOCON() {
-        test(SerialFormat.hocon());
+    public void testProperties() throws IOException {
+        testFormat("PROPERTIES", ObjectMappers.properties(), false);
     }
 
     @Test
-    public void testCSV() throws Exception {
+    public void testCSV() throws IOException {
 
         Movie movie = Movie.create();
 
@@ -68,7 +67,7 @@ public class SerializationTest {
                 .build();
 
         CsvMapper mapper = new CsvMapper();
-        SerialFormat.configure(mapper);
+        ObjectMappers.configure(mapper);
         mapper.configure(JsonGenerator.Feature.IGNORE_UNKNOWN, true);
         mapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector());
 
@@ -76,55 +75,74 @@ public class SerializationTest {
         System.out.println(serialized);
 
         MappingIterator<Movie> iter = mapper.readerFor(Movie.class).with(schema).readValues(serialized);
-        Assert.assertTrue(iter.hasNext());
+        assertThat(iter.hasNext()).isTrue();
         Movie restored = iter.next();
-        System.out.println(SerialFormat.json().stringify(restored));
-        Assert.assertEquals(movie.getTitle(), restored.getTitle());
-        Assert.assertEquals(movie.getYear(), restored.getYear());
-        Assert.assertEquals(movie.getAspectRatio(), restored.getAspectRatio());
-        Assert.assertTrue(CollectionUtil.equals(movie.getGenres(), restored.getGenres()));
+        System.out.println(ObjectMappers.json().writeValueAsString(restored));
+        assertThat(restored.getTitle()).isEqualTo(movie.getTitle());
+        assertThat(restored.getYear()).isEqualTo(movie.getYear());
+        assertThat(restored.getAspectRatio()).isEqualTo(movie.getAspectRatio());
+        assertThat(restored.getGenres()).isEqualTo(movie.getGenres());
 
-        Assert.assertFalse(iter.hasNext());
+        assertThat(iter.hasNext()).isFalse();
 
     }
 
-    private void test(SerialFormat format) {
+    private void testFormat(String displayName, ObjectMapper objectMapper, boolean isBinary) throws IOException {
 
-        System.out.println("Testing format: " + format.getName());
-        if (!format.isBinary()) {
-            testSerializeText(format);
+        System.out.println("Testing format: " + displayName);
+        if (isBinary) {
+            testSerializeBinary(objectMapper);
+        } else {
+            testSerializeText(objectMapper);
         }
-        testSerialize(format);
-        benchmark(format);
+        benchmark(objectMapper);
     }
 
-    private void testSerialize(SerialFormat format) {
+    private void testSerializeBinary(ObjectMapper objectMapper) throws IOException {
 
         Movie movie = Movie.create();
-        byte[] serialized = format.serialize(movie);
+        byte[] serialized = objectMapper.writeValueAsBytes(movie);
         System.out.println(serialized.length + " bytes");
-        Movie parsed = format.deserialize(Movie.class, serialized);
+
+        ByteArrayInputStream in = new ByteArrayInputStream(serialized);
+        int index = 0;
+        int read;
+        while ((read = in.read()) >= 0) {
+            String hex = Integer.toHexString(read).toUpperCase();
+            while (hex.length() < 2) {
+                hex = '0' + hex;
+            }
+            System.out.print(hex + " ");
+            index++;
+            if (index % 32 == 0) {
+                System.out.println();
+            }
+        }
+        System.out.println();
+
+        Movie parsed = objectMapper.readValue(serialized, Movie.class);
         verifyParsed(movie, parsed);
     }
 
-    private void testSerializeText(SerialFormat format) {
+    private void testSerializeText(ObjectMapper objectMapper) throws IOException {
 
         Movie movie = Movie.create();
-        String serialized = format.stringify(movie);
+        System.out.println(objectMapper.writeValueAsBytes(movie).length + " bytes");
+        String serialized = objectMapper.writeValueAsString(movie);
         System.out.println(serialized);
-        Movie parsed = format.parse(Movie.class, serialized);
+        Movie parsed = objectMapper.readValue(serialized, Movie.class);
         verifyParsed(movie, parsed);
     }
 
-    private void benchmark(SerialFormat format) {
+    private void benchmark(ObjectMapper objectMapper) throws IOException {
 
         Movie movie = Movie.create();
         long benchmarkTimeNs = benchmarkTimeMs * 1000000L;
 
         //warmup
         for (int i = 0; i < 100; i++) {
-            byte[] serialized = format.serialize(movie);
-            format.deserialize(Movie.class, serialized);
+            byte[] serialized = objectMapper.writeValueAsBytes(movie);
+            objectMapper.readValue(serialized, Movie.class);
         }
         try {
             Thread.sleep(1000);
@@ -136,19 +154,19 @@ public class SerializationTest {
         long endTime = System.nanoTime() + benchmarkTimeNs;
         long samples = 0;
         while (System.nanoTime() < endTime) {
-            format.serialize(movie);
+            objectMapper.writeValueAsBytes(movie);
             samples++;
         }
         time = System.nanoTime() - time;
         System.out.println(NUMBER_FORMAT.format(time / samples / 1000d) + " µS serialization (" + samples + " samples)");
 
-        byte[] serialized = format.serialize(movie);
+        byte[] serialized = objectMapper.writeValueAsBytes(movie);
         time = System.nanoTime();
 
         endTime = System.nanoTime() + benchmarkTimeNs;
         samples = 0;
         while (System.nanoTime() < endTime) {
-            format.deserialize(Movie.class, serialized);
+            objectMapper.readValue(serialized, Movie.class);
             samples++;
         }
 
@@ -157,28 +175,18 @@ public class SerializationTest {
     }
 
     private void verifyParsed(Movie original, Movie parsed) {
-        Assert.assertEquals(original.getTitle(), parsed.getTitle());
-        Assert.assertEquals(original.getYear(), parsed.getYear());
-        Assert.assertEquals(original.getSynopsis(), parsed.getSynopsis());
-        Assert.assertEquals(original.getCreated(), parsed.getCreated());
-        Assert.assertEquals(original.getAspectRatio(), parsed.getAspectRatio());
-        Assert.assertNotNull(parsed.getGenres());
-        Assert.assertTrue(CollectionUtil.equals(original.getGenres(), parsed.getGenres()));
-        Assert.assertTrue(CollectionUtil.equals(original.getRatings(), parsed.getRatings()));
-        Assert.assertTrue(CollectionUtil.equals(original.getActors(), parsed.getActors()));
-        Assert.assertTrue(CollectionUtil.equals(original.getMetadata().getKeys(), parsed.getMetadata().getKeys()));
+        assertThat(parsed.getTitle()).isEqualTo(original.getTitle());
+        assertThat(parsed.getYear()).isEqualTo(original.getYear());
+        assertThat(parsed.getSynopsis()).isEqualTo(original.getSynopsis());
+        assertThat(parsed.getCreated()).isEqualTo(original.getCreated());
+        assertThat(parsed.getAspectRatio()).isEqualTo(original.getAspectRatio());
+        assertThat(parsed.getGenres()).isNotNull();
+        assertThat(parsed.getGenres()).containsExactlyElementsOf(original.getGenres());
+        assertThat(parsed.getRatings()).containsExactlyInAnyOrderEntriesOf(original.getRatings());
+        assertThat(parsed.getActors()).containsExactlyElementsOf(original.getActors());
+        assertThat(parsed.getMetadata().getKeys()).containsExactlyInAnyOrderElementsOf(original.getMetadata().getKeys());
         for (String key : original.getMetadata().getKeys()) {
-            Assert.assertEquals(original.getMetadata().get(key).get(), parsed.getMetadata().get(key).get());
-        }
-        try {
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode one = objectMapper.readTree(objectMapper.writeValueAsString(original));
-            JsonNode two = objectMapper.readTree(objectMapper.writeValueAsString(parsed));
-            Assert.assertEquals(one, two);
-
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
+            assertThat(parsed.getMetadata().get(key)).isEqualTo(original.getMetadata().get(key));
         }
     }
 }

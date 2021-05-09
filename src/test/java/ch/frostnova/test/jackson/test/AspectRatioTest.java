@@ -1,11 +1,15 @@
 package ch.frostnova.test.jackson.test;
 
 import ch.frostnova.test.jackson.test.util.domain.AspectRatio;
-import org.junit.Assert;
+import org.assertj.core.data.Offset;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.data.Offset.offset;
 
 /**
  * Test for {@link ch.frostnova.test.jackson.test.util.domain.AspectRatio}
@@ -15,25 +19,27 @@ import java.util.List;
  */
 public class AspectRatioTest {
 
-    private final static double EPSILON = 1e-10;
+    private final static Offset EPSILON = offset(1e-10);
 
     @Test
     public void testSimple() {
         AspectRatio aspectRatio = new AspectRatio("16:9");
-        Assert.assertEquals(16, aspectRatio.getWidth(), EPSILON);
-        Assert.assertEquals(9, aspectRatio.getHeight(), EPSILON);
-        Assert.assertEquals(16d / 9, aspectRatio.getAspect(), EPSILON);
-        Assert.assertEquals("16:9", aspectRatio.toString());
+        assertThat(aspectRatio.getWidth()).isCloseTo(16, EPSILON);
+        assertThat(aspectRatio.getHeight()).isCloseTo(9, EPSILON);
+        assertThat(aspectRatio.getAspect()).isCloseTo(16d / 9, EPSILON);
+        assertThat(aspectRatio.toString()).isEqualTo("16:9");
     }
 
     @Test
     public void testNormalize() {
         AspectRatio aspectRatio = new AspectRatio(16, 9);
         AspectRatio normalized = aspectRatio.normalized();
-        Assert.assertEquals(aspectRatio, normalized);
-        Assert.assertEquals(16d / 9, normalized.getWidth(), EPSILON);
-        Assert.assertEquals(1, normalized.getHeight(), EPSILON);
-        Assert.assertEquals("16:9", aspectRatio.toString());
+
+        assertThat(aspectRatio).isEqualTo(normalized);
+        assertThat(normalized.getWidth()).isCloseTo(1.7777777777777777, EPSILON);
+        assertThat(normalized.getHeight()).isCloseTo(1, EPSILON);
+        assertThat(normalized.getAspect()).isCloseTo(16d / 9, EPSILON);
+        assertThat(normalized.toString()).isEqualTo("1.78:1");
     }
 
     @Test
@@ -44,51 +50,20 @@ public class AspectRatioTest {
 
         for (String s : valid) {
             AspectRatio aspectRatio = new AspectRatio(s);
-            Assert.assertEquals(aspectRatio, new AspectRatio(aspectRatio.toString()));
+            assertThat(new AspectRatio(aspectRatio.toString())).isEqualTo(aspectRatio);
         }
         for (String s : invalid) {
-            try {
-                new AspectRatio(s);
-                Assert.fail("Expected exception for input string: " + s);
-            } catch (IllegalArgumentException expected) {
-                // as expected
-            }
+            assertThatThrownBy(() -> new AspectRatio(s)).isInstanceOf(IllegalArgumentException.class);
         }
     }
 
     @Test
     public void testValueConstruct() {
-
-        try {
-            new AspectRatio(0, 0);
-            Assert.fail("Expected exception");
-        } catch (IllegalArgumentException expected) {
-            // as expected
-        }
-        try {
-            new AspectRatio(0, 5);
-            Assert.fail("Expected exception");
-        } catch (IllegalArgumentException expected) {
-            // as expected
-        }
-        try {
-            new AspectRatio(-7, 6);
-            Assert.fail("Expected exception");
-        } catch (IllegalArgumentException expected) {
-            // as expected
-        }
-        try {
-            new AspectRatio(7, -6);
-            Assert.fail("Expected exception");
-        } catch (IllegalArgumentException expected) {
-            // as expected
-        }
-        try {
-            new AspectRatio(-7, -6);
-            Assert.fail("Expected exception");
-        } catch (IllegalArgumentException expected) {
-            // as expected
-        }
+        assertThatThrownBy(() -> new AspectRatio(0, 0)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new AspectRatio(0, 5)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new AspectRatio(5, 0)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new AspectRatio(7, -6)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new AspectRatio(-7, 6)).isInstanceOf(IllegalArgumentException.class);
     }
 
 }

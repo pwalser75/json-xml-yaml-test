@@ -1,11 +1,16 @@
 package ch.frostnova.test.jackson.test.util.domain;
 
-import ch.frostnova.test.jackson.test.util.converter.*;
-import com.fasterxml.jackson.databind.annotation.*;
+import ch.frostnova.test.jackson.test.util.converter.StringConstructorDeserializer;
+import ch.frostnova.test.jackson.test.util.converter.ToStringSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import java.text.*;
-import java.util.*;
-import java.util.regex.*;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Value object: an aspect ratio
