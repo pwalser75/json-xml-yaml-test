@@ -9,41 +9,35 @@
 
     <name>JSON/XML/YAML Test</name>
 
-    <prerequisites>
-        <maven>3.0</maven>
-    </prerequisites>
-
     <build>
         <defaultGoal>clean install</defaultGoal>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <release>11</release>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <junitVersion>4.13</junitVersion>
-        <mockitoVersion>3.3.3</mockitoVersion>
-        <jacksonVersion>2.11.0</jacksonVersion>
+        <junitVersion>4.13.2</junitVersion>
+        <assertjVersion>3.19.0</assertjVersion>
+        <mockitoVersion>3.8.0</mockitoVersion>
+        <jacksonVersion>2.12.3</jacksonVersion>
         <slf4jVersion>1.7.30</slf4jVersion>
         <logbackVersion>1.2.3</logbackVersion>
-        <hoconJacksonVersion>1.1.1</hoconJacksonVersion>
         <jsonSchemaValidatorVersion>1.5.1</jsonSchemaValidatorVersion>
+
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junitVersion}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>${mockitoVersion}</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -98,23 +92,44 @@
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-cbor</artifactId>
+            <version>${jacksonVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-csv</artifactId>
             <version>${jacksonVersion}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
-            <artifactId>jackson-dataformat-cbor</artifactId>
-            <version>${jacksonVersion}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.honton.chas.hocon</groupId>
-            <artifactId>jackson-dataformat-hocon</artifactId>
-            <version>${hoconJacksonVersion}</version>
+            <artifactId>jackson-dataformat-properties</artifactId>
+            <version>2.11.4</version>
         </dependency>
         <dependency>
             <groupId>org.everit.json</groupId>
             <artifactId>org.everit.json.schema</artifactId>
             <version>${jsonSchemaValidatorVersion}</version>
+        </dependency>
+
+        <!-- Test dependencies -->
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junitVersion}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockitoVersion}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertjVersion}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
