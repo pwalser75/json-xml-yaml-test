@@ -30,9 +30,7 @@ public abstract class StringConstructorDeserializer<T> extends StdDeserializer<T
             if (!Modifier.isPublic(constructor.getModifiers())) {
                 throw new IllegalArgumentException(type.getName() + " does not have a public string-constructor");
             }
-            if (!constructor.isAccessible()) {
-                constructor.setAccessible(true);
-            }
+            constructor.setAccessible(true);
         } catch (NoSuchMethodException ex) {
             throw new IllegalArgumentException(type.getName() + " must have a string constructor");
         }

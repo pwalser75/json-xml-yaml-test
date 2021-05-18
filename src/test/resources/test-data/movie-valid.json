@@ -6,7 +6,8 @@
     "Thriller"
   ],
   "aspect-ratio": "2.39:1",
-  "created": "2020-06-15T10:08:25Z",
+  "duration": "1h 57m",
+  "created": "2021-05-18T12:25:17Z",
   "ratings": {
     "IMDB": 8.2,
     "Metacritic": 89.0
@@ -17,19 +18,19 @@
       "firstName": "Harrison",
       "lastName": "Ford",
       "dateOfBirth": "1942-07-13",
-      "age": 77
+      "age": 78
     },
     {
       "firstName": "Rutger",
       "lastName": "Hauer",
       "dateOfBirth": "1944-01-23",
-      "age": 76
+      "age": 77
     },
     {
       "firstName": "Sean",
       "lastName": "Young",
       "dateOfBirth": "1959-11-20",
-      "age": 60
+      "age": 61
     }
   ],
   "metadata": {

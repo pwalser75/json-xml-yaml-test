@@ -73,7 +73,8 @@ public class SchemaValidationTest {
             assertThat(validationMessages.contains("#/actors/0/age: -77.0 is not higher or equal to 0")).isTrue();
             assertThat(validationMessages.contains("#/actors/0: required key [lastName] not found")).isTrue();
             assertThat(validationMessages.contains("#/actors/1/lastName: string [dREBIN] does not match pattern ^\\p{Lu}\\p{Ll}+$")).isTrue();
-            assertThat(13).isEqualTo(validationMessages.size());
+            assertThat(validationMessages.contains("#/duration: string [123] does not match pattern ^\\s*(?:(?:\\d+)\\s*w)?\\s*(?:(?:\\d+)\\s*d)?\\s*(?:(?:\\d+)\\s*h)?\\s*(?:(?:\\d+)\\s*m)?\\s*(?:(?:\\d+)\\s*s)?\\s*$")).isTrue();
+            assertThat(14).isEqualTo(validationMessages.size());
         }
     }
 }

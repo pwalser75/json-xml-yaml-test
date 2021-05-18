@@ -1,12 +1,16 @@
 package ch.frostnova.test.jackson.test.util.domain;
 
+import ch.frostnova.test.jackson.test.util.converter.DurationConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -62,6 +66,12 @@ public class Movie {
     @JacksonXmlProperty(localName = "aspectRatio")
     private AspectRatio aspectRatio;
 
+    @JsonProperty("duration")
+    @JacksonXmlProperty(localName = "duration")
+    @JsonSerialize(using = DurationConverter.Serializer.class)
+    @JsonDeserialize(using = DurationConverter.Deserializer.class)
+    private Duration duration;
+
     @JsonProperty("metadata")
     @JacksonXmlProperty(localName = "metadata")
     private Metadata metadata = new Metadata();
@@ -77,6 +87,7 @@ public class Movie {
                 .addRating("Metacritic", 89d)
                 .synopsis("A blade runner must pursue and terminate four replicants\n who stole a ship in space and have returned to Earth to find their creator.")
                 .aspectRatio(new AspectRatio(2.39, 1))
+                .duration(Duration.ofMinutes(117))
                 .addActor(new Actor("Harrison", "Ford", LocalDate.of(1942, 7, 13)))
                 .addActor(new Actor("Rutger", "Hauer", LocalDate.of(1944, 1, 23)))
                 .addActor(new Actor("Sean", "Young", LocalDate.of(1959, 11, 20)))
@@ -150,6 +161,14 @@ public class Movie {
         this.aspectRatio = aspectRatio;
     }
 
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
     public Metadata getMetadata() {
         return metadata;
     }
@@ -201,6 +220,10 @@ public class Movie {
 
         public Builder aspectRatio(AspectRatio aspectRatio) {
             return set(x -> x.aspectRatio = aspectRatio);
+        }
+
+        public Builder duration(Duration duration) {
+            return set(x -> x.duration = duration);
         }
 
         public Builder addMetadata(String key, String value) {

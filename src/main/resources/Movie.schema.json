@@ -17,6 +17,10 @@
       "type": "string",
       "pattern": "^\\d+(\\.\\d+)?\\:\\d+(\\.\\d+)?$"
     },
+    "duration": {
+      "type": "string",
+      "pattern": "^\\s*(?:(?:\\d+)\\s*w)?\\s*(?:(?:\\d+)\\s*d)?\\s*(?:(?:\\d+)\\s*h)?\\s*(?:(?:\\d+)\\s*m)?\\s*(?:(?:\\d+)\\s*s)?\\s*$"
+    },
     "person": {
       "type": "object",
       "properties": {
@@ -61,6 +65,9 @@
     },
     "aspect-ratio": {
       "$ref": "#/definitions/aspect-ratio"
+    },
+    "duration": {
+      "$ref": "#/definitions/duration"
     },
     "created": {
       "type": "string",
