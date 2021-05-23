@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -87,7 +87,7 @@ public class SerializationTest {
 
     }
 
-    private void testFormat(String displayName, ObjectMapper objectMapper, boolean isBinary) throws IOException {
+    void testFormat(String displayName, ObjectMapper objectMapper, boolean isBinary) throws IOException {
 
         System.out.println("Testing format: " + displayName);
         if (isBinary) {

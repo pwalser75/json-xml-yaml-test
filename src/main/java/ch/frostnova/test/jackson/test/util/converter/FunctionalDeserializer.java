@@ -16,7 +16,7 @@ import java.util.function.Function;
  */
 public abstract class FunctionalDeserializer<T> extends JsonDeserializer<T> {
 
-    private Function<String, T> converter;
+    private final Function<String, T> converter;
 
     /**
      * Constructor, expects a converter function.

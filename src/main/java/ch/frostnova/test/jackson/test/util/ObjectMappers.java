@@ -43,7 +43,7 @@ public final class ObjectMappers {
         CBOR // Concise Binary Object Representation (https://www.rfc-editor.org/info/rfc7049)
     }
 
-    private static Map<Type, ObjectMapper> objectMappers = new ConcurrentHashMap<>();
+    private static final Map<Type, ObjectMapper> objectMappers = new ConcurrentHashMap<>();
 
     private ObjectMappers() {
 

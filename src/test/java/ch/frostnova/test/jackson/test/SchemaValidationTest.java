@@ -2,13 +2,13 @@ package ch.frostnova.test.jackson.test;
 
 import ch.frostnova.test.jackson.test.util.ObjectMappers;
 import ch.frostnova.test.jackson.test.util.domain.Movie;
+import org.assertj.core.api.Assertions;
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.ValidationException;
 import org.everit.json.schema.loader.SchemaLoader;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Set;
@@ -55,7 +55,7 @@ public class SchemaValidationTest {
 
         try {
             getSchema().validate(root);
-            Assert.fail("Expected ValidationException");
+            Assertions.fail("Expected ValidationException");
         } catch (ValidationException ex) {
             ex.getAllMessages().forEach(m -> System.out.println(m));
 

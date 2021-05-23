@@ -3,8 +3,7 @@ package ch.frostnova.test.jackson.test;
 import ch.frostnova.test.jackson.test.util.converter.DurationConverter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -19,10 +18,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class DurationConverterTest {
 
-    private ObjectMapper objectMapper;
+    private static final ObjectMapper objectMapper;
 
-    @Before
-    public void setup() {
+    static {
         objectMapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
         module.addSerializer(Duration.class, new DurationConverter.Serializer());

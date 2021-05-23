@@ -24,8 +24,8 @@ public class AspectRatio {
 
     private final static Pattern PATTERN = Pattern.compile("\\s*(\\d+(?:\\.\\d+)?)\\s*:\\s*(\\d+(?:\\.\\d+)?)\\s*");
     private final static DecimalFormat numberFormat = new DecimalFormat("0.##", new DecimalFormatSymbols(Locale.US));
-    private double width;
-    private double height;
+    private final double width;
+    private final double height;
 
     public AspectRatio(String formatted) {
 

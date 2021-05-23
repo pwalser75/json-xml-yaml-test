@@ -29,8 +29,12 @@ dependencyUpdates {
     }
 }
 
+test {
+    useJUnitPlatform()
+}
+
 ext {
-    junitVersion = '4.13.2'
+    junitVersion = '5.7.1'
     assertjVersion = '3.19.0'
     mockitoVersion = '3.8.0'
     jacksonVersion = '2.12.3'
@@ -52,7 +56,7 @@ ext {
             properties : "com.fasterxml.jackson.dataformat:jackson-dataformat-properties:${jacksonVersion}",
             jsonSchema : "org.everit.json:org.everit.json.schema:${jsonSchemaValidatorVersion}",
             testbase   : [
-                    "junit:junit:${junitVersion}",
+                    "org.junit.jupiter:junit-jupiter:$junitVersion",
                     "org.assertj:assertj-core:${assertjVersion}",
                     "org.mockito:mockito-core:${mockitoVersion}"
             ],

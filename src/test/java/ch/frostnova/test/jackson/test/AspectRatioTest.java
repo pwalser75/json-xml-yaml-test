@@ -2,7 +2,7 @@ package ch.frostnova.test.jackson.test;
 
 import ch.frostnova.test.jackson.test.util.domain.AspectRatio;
 import org.assertj.core.data.Offset;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +22,7 @@ public class AspectRatioTest {
     private final static Offset EPSILON = offset(1e-10);
 
     @Test
-    public void testSimple() {
+    void testSimple() {
         AspectRatio aspectRatio = new AspectRatio("16:9");
         assertThat(aspectRatio.getWidth()).isCloseTo(16, EPSILON);
         assertThat(aspectRatio.getHeight()).isCloseTo(9, EPSILON);
@@ -31,7 +31,7 @@ public class AspectRatioTest {
     }
 
     @Test
-    public void testNormalize() {
+    void testNormalize() {
         AspectRatio aspectRatio = new AspectRatio(16, 9);
         AspectRatio normalized = aspectRatio.normalized();
 
@@ -43,7 +43,7 @@ public class AspectRatioTest {
     }
 
     @Test
-    public void testStringConstruct() {
+    void testStringConstruct() {
 
         List<String> valid = Arrays.asList("16:9", " 16 : \n  9 \t", "123.4 : 9.73 ", "0.16:0.9");
         List<String> invalid = Arrays.asList(null, "", "nope", "16/9", "3.4.5 : 9.8", "16 : nine", "16:0", "-16:-9");
@@ -58,7 +58,7 @@ public class AspectRatioTest {
     }
 
     @Test
-    public void testValueConstruct() {
+    void testValueConstruct() {
         assertThatThrownBy(() -> new AspectRatio(0, 0)).isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> new AspectRatio(0, 5)).isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> new AspectRatio(5, 0)).isInstanceOf(IllegalArgumentException.class);

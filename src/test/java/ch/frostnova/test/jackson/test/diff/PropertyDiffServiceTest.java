@@ -5,25 +5,24 @@ import ch.frostnova.test.jackson.test.util.diff.PropertyDiffService;
 import ch.frostnova.test.jackson.test.util.domain.AspectRatio;
 import ch.frostnova.test.jackson.test.util.domain.Movie;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 public class PropertyDiffServiceTest {
 
-    private ObjectMapper objectMapper = ObjectMappers.json();
+    private final ObjectMapper objectMapper = ObjectMappers.json();
 
-    private PropertyDiffService propertyDiffService = new PropertyDiffService(objectMapper);
+    private final PropertyDiffService propertyDiffService = new PropertyDiffService(objectMapper);
 
     private Movie before;
     private Movie after;
 
-    @Before
+    @BeforeEach
     public void init() {
         before = Movie.create();
         after = clone(before);

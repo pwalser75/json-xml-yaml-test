@@ -27,7 +27,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <junitVersion>4.13.2</junitVersion>
+        <junitVersion>5.7.1</junitVersion>
         <assertjVersion>3.19.0</assertjVersion>
         <mockitoVersion>3.8.0</mockitoVersion>
         <jacksonVersion>2.12.3</jacksonVersion>
@@ -114,8 +114,8 @@
         <!-- Test dependencies -->
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
             <version>${junitVersion}</version>
             <scope>test</scope>
         </dependency>

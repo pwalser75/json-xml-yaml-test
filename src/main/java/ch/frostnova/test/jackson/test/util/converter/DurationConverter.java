@@ -40,7 +40,7 @@ public final class DurationConverter {
 
     private static Duration parse(String value) {
         if (value == null || value.trim().length() == 0) {
-            return Duration.ofNanos(0);
+            return Duration.ofSeconds(0);
         }
         Matcher matcher = PATTERN.matcher(value);
         if (!matcher.matches()) {
