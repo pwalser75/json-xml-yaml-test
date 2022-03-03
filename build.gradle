@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'com.github.ben-manes.versions' version '0.38.0'
+    id 'com.github.ben-manes.versions' version '0.42.0'
 }
 apply plugin: 'java'
 
@@ -34,11 +34,11 @@ test {
 }
 
 ext {
-    junitVersion = '5.7.1'
-    assertjVersion = '3.19.0'
-    mockitoVersion = '3.8.0'
-    jacksonVersion = '2.12.3'
-    slf4jVersion = '1.7.30'
+    junitVersion = '5.8.2'
+    assertjVersion = '3.22.0'
+    mockitoVersion = '4.3.1'
+    jacksonVersion = '2.13.1'
+    slf4jVersion = '1.7.36'
     logbackVersion = '1.2.3'
     hoconJacksonVersion = '1.1.1'
     jsonSchemaValidatorVersion = '1.5.1'

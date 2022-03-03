@@ -61,14 +61,17 @@ public class PropertyDiffServiceTest {
         List<PropertyDiffService.PropertyDiff> diff = propertyDiffService.diff(before, after);
         diff.forEach(System.out::println);
 
-        assertThat(diff.contains(new PropertyDiffService.PropertyDiff("aspect-ratio", "2.39:1", "4:3"))).isTrue();
-        assertThat(diff.contains(new PropertyDiffService.PropertyDiff("title", "Blade Runner", "Changed"))).isTrue();
-        assertThat(diff.contains(new PropertyDiffService.PropertyDiff("year", "1982", "1983"))).isTrue();
-        assertThat(diff.contains(new PropertyDiffService.PropertyDiff("metadata.new", null, "value"))).isTrue();
-        assertThat(diff.contains(new PropertyDiffService.PropertyDiff("actors[2].age", "61", null))).isTrue();
-        assertThat(diff.contains(new PropertyDiffService.PropertyDiff("actors[2].dateOfBirth", "1959-11-20", null))).isTrue();
-        assertThat(diff.contains(new PropertyDiffService.PropertyDiff("actors[2].firstName", "Sean", null))).isTrue();
-        assertThat(diff.contains(new PropertyDiffService.PropertyDiff("actors[2].lastName", "Young", null))).isTrue();
-        assertThat(diff.contains(new PropertyDiffService.PropertyDiff("synopsis", null, after.getSynopsis()))).isTrue();
+        Integer age = before.getActors().get(2).getAge();
+
+        assertThat(diff).containsExactlyInAnyOrder(
+                new PropertyDiffService.PropertyDiff("aspect-ratio", "2.39:1", "4:3"),
+                new PropertyDiffService.PropertyDiff("title", "Blade Runner", "Changed"),
+                new PropertyDiffService.PropertyDiff("year", "1982", "1983"),
+                new PropertyDiffService.PropertyDiff("metadata.new", null, "value"),
+                new PropertyDiffService.PropertyDiff("actors[2].age", String.valueOf(age), null),
+                new PropertyDiffService.PropertyDiff("actors[2].dateOfBirth", "1959-11-20", null),
+                new PropertyDiffService.PropertyDiff("actors[2].firstName", "Sean", null),
+                new PropertyDiffService.PropertyDiff("actors[2].lastName", "Young", null),
+                new PropertyDiffService.PropertyDiff("synopsis", null, after.getSynopsis()));
     }
 }
