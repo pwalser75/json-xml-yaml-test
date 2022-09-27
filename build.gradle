@@ -34,13 +34,12 @@ test {
 }
 
 ext {
-    junitVersion = '5.8.2'
-    assertjVersion = '3.22.0'
-    mockitoVersion = '4.3.1'
-    jacksonVersion = '2.13.1'
-    slf4jVersion = '1.7.36'
-    logbackVersion = '1.2.3'
-    hoconJacksonVersion = '1.1.1'
+    junitVersion = '5.9.1'
+    assertjVersion = '3.23.1'
+    mockitoVersion = '4.8.0'
+    jacksonVersion = '2.13.4'
+    slf4jVersion = '2.0.2'
+    logbackVersion = '1.4.1'
     jsonSchemaValidatorVersion = '1.5.1'
 
     libs = [

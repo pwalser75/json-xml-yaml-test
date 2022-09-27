@@ -27,12 +27,12 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <junitVersion>5.7.1</junitVersion>
-        <assertjVersion>3.19.0</assertjVersion>
-        <mockitoVersion>3.8.0</mockitoVersion>
-        <jacksonVersion>2.12.3</jacksonVersion>
-        <slf4jVersion>1.7.30</slf4jVersion>
-        <logbackVersion>1.2.3</logbackVersion>
+        <junitVersion>5.9.1</junitVersion>
+        <assertjVersion>3.23.1</assertjVersion>
+        <mockitoVersion>4.8.0</mockitoVersion>
+        <jacksonVersion>2.13.4</jacksonVersion>
+        <slf4jVersion>2.0.2</slf4jVersion>
+        <logbackVersion>1.4.1</logbackVersion>
         <jsonSchemaValidatorVersion>1.5.1</jsonSchemaValidatorVersion>
 
     </properties>
