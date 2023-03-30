@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
 import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
 import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper;
+import com.fasterxml.jackson.dataformat.protobuf.ProtobufMapper;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -13,18 +14,10 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static ch.frostnova.test.jackson.test.util.ObjectMappers.Type.CBOR;
-import static ch.frostnova.test.jackson.test.util.ObjectMappers.Type.JSON;
-import static ch.frostnova.test.jackson.test.util.ObjectMappers.Type.PROPERTIES;
-import static ch.frostnova.test.jackson.test.util.ObjectMappers.Type.XML;
-import static ch.frostnova.test.jackson.test.util.ObjectMappers.Type.YAML;
+import static ch.frostnova.test.jackson.test.util.ObjectMappers.Type.*;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
-import static com.fasterxml.jackson.databind.DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT;
-import static com.fasterxml.jackson.databind.DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY;
-import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
-import static com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT;
-import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS;
-import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED;
+import static com.fasterxml.jackson.databind.DeserializationFeature.*;
+import static com.fasterxml.jackson.databind.SerializationFeature.*;
 import static com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature.MINIMIZE_QUOTES;
 
 /**
@@ -40,7 +33,8 @@ public final class ObjectMappers {
         YAML, //  Yet Another Markup Language
         XML, //  eXtensible Markup Language
         PROPERTIES, // Java Properties format
-        CBOR // Concise Binary Object Representation (https://www.rfc-editor.org/info/rfc7049)
+        CBOR, // Concise Binary Object Representation (https://www.rfc-editor.org/info/rfc7049)
+        PROTOBUF // Google Protobuffer format
     }
 
     private static final Map<Type, ObjectMapper> objectMappers = new ConcurrentHashMap<>();
@@ -77,6 +71,15 @@ public final class ObjectMappers {
     public static ObjectMapper cbor() {
         return objectMappers.computeIfAbsent(CBOR, type -> {
             ObjectMapper mapper = new ObjectMapper(new CBORFactory());
+            mapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector());
+            return configure(mapper);
+        });
+    }
+
+
+    public static ObjectMapper protobuf() {
+        return objectMappers.computeIfAbsent(PROTOBUF, type -> {
+            ObjectMapper mapper = new ProtobufMapper();
             mapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector());
             return configure(mapper);
         });

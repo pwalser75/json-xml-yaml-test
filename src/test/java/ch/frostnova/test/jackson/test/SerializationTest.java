@@ -8,6 +8,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import com.fasterxml.jackson.dataformat.protobuf.ProtobufMapper;
+import com.fasterxml.jackson.dataformat.protobuf.schema.NativeProtobufSchema;
+import com.fasterxml.jackson.dataformat.protobuf.schema.ProtobufSchema;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -45,6 +48,22 @@ public class SerializationTest {
     @Test
     public void testCBOR() throws IOException {
         testFormat("CBOR", ObjectMappers.cbor(), true);
+    }
+
+    @Test
+    public void testProtobuf() throws IOException {
+        testFormat("PROTOBUF", ObjectMappers.protobuf(), true);
+    }
+
+    @Test
+    public void protobufSchema() throws IOException {
+
+        ProtobufMapper mapper = (ProtobufMapper) ObjectMappers.protobuf();
+        ProtobufSchema schemaWrapper = mapper.generateSchemaFor(Movie.class);
+        NativeProtobufSchema nativeProtobufSchema = schemaWrapper.getSource();
+
+        String schema = nativeProtobufSchema.toString();
+        System.out.println(schema);
     }
 
     @Test

@@ -51,6 +51,7 @@ ext {
             xml        : "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:${jacksonVersion}",
             yaml       : "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}",
             cbor       : "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:${jacksonVersion}",
+            protobuf   : "com.fasterxml.jackson.dataformat:jackson-dataformat-protobuf:${jacksonVersion}",
             csv        : "com.fasterxml.jackson.dataformat:jackson-dataformat-csv:${jacksonVersion}",
             properties : "com.fasterxml.jackson.dataformat:jackson-dataformat-properties:${jacksonVersion}",
             jsonSchema : "org.everit.json:org.everit.json.schema:${jsonSchemaValidatorVersion}",
@@ -74,8 +75,9 @@ dependencies {
     implementation libs.jackson
     implementation libs.xml
     implementation libs.yaml
-    implementation libs.cbor
     implementation libs.properties
+    implementation libs.protobuf
+    implementation libs.cbor
     implementation libs.csv
     implementation libs.jsonSchema
     implementation libs.loggingAPI

@@ -30,7 +30,7 @@
         <junitVersion>5.9.1</junitVersion>
         <assertjVersion>3.23.1</assertjVersion>
         <mockitoVersion>4.8.0</mockitoVersion>
-        <jacksonVersion>2.13.4</jacksonVersion>
+        <jacksonVersion>2.14.2</jacksonVersion>
         <slf4jVersion>2.0.2</slf4jVersion>
         <logbackVersion>1.4.1</logbackVersion>
         <jsonSchemaValidatorVersion>1.5.1</jsonSchemaValidatorVersion>
@@ -93,6 +93,11 @@
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-cbor</artifactId>
+            <version>${jacksonVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-protobuf</artifactId>
             <version>${jacksonVersion}</version>
         </dependency>
         <dependency>
