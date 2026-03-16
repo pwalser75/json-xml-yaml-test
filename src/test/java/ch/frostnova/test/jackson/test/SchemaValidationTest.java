@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author pwalser
  * @since 2020-06-15
  */
-public class SchemaValidationTest {
+class SchemaValidationTest {
 
     private Schema getSchema() {
         JSONObject jsonSchema = new JSONObject(new JSONTokener(getClass().getResourceAsStream("/Movie.schema.json")));
@@ -34,7 +34,7 @@ public class SchemaValidationTest {
     }
 
     @Test
-    public void testSchemaValidation() throws IOException {
+    void testSchemaValidation() throws IOException {
 
         Movie movie = Movie.create();
         String json = ObjectMappers.json().writeValueAsString(movie);
@@ -44,37 +44,39 @@ public class SchemaValidationTest {
     }
 
     @Test
-    public void testSchemaValidationValid() {
+    void testSchemaValidationValid() {
         JSONObject root = new JSONObject(new JSONTokener(getClass().getResourceAsStream("/test-data/movie-valid.json")));
         getSchema().validate(root);
     }
 
     @Test
-    public void testSchemaValidationInvalid() {
+    void testSchemaValidationInvalid() {
         JSONObject root = new JSONObject(new JSONTokener(getClass().getResourceAsStream("/test-data/movie-invalid.json")));
 
         try {
             getSchema().validate(root);
             Assertions.fail("Expected ValidationException");
         } catch (ValidationException ex) {
-            ex.getAllMessages().forEach(m -> System.out.println(m));
+            ex.getAllMessages().forEach(System.out::println);
 
             Set<String> validationMessages = ex.getAllMessages().stream().map(String::valueOf).collect(Collectors.toSet());
-            assertThat(validationMessages.contains("#/metadata/something: expected type: String, found: Boolean")).isTrue();
-            assertThat(validationMessages.contains("#/aspect-ratio: string [555] does not match pattern ^\\d+(\\.\\d+)?\\:\\d+(\\.\\d+)?$")).isTrue();
-            assertThat(validationMessages.contains("#/year: expected type: Integer, found: Double")).isTrue();
-            assertThat(validationMessages.contains("#/genres/0: expected type: String, found: Integer")).isTrue();
-            assertThat(validationMessages.contains("#/created: [yesterday] is not a valid date-time. Expected [yyyy-MM-dd'T'HH:mm:ssZ, yyyy-MM-dd'T'HH:mm:ss.[0-9]{1,9}Z]")).isTrue();
-            assertThat(validationMessages.contains("#/ratings/IMDB: -8.2 is not higher or equal to 0")).isTrue();
-            assertThat(validationMessages.contains("#: required key [title] not found")).isTrue();
-            assertThat(validationMessages.contains("#: extraneous key [nobodyExpects] is not permitted")).isTrue();
-            assertThat(validationMessages.contains("#/actors/0/firstName: string [?] does not match pattern ^\\p{Lu}\\p{Ll}+$")).isTrue();
-            assertThat(validationMessages.contains("#/actors/0/dateOfBirth: string [1942-42-13] does not match pattern \\d{4}-(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|[1-2][0-9]|3[0-1])")).isTrue();
-            assertThat(validationMessages.contains("#/actors/0/age: -77.0 is not higher or equal to 0")).isTrue();
-            assertThat(validationMessages.contains("#/actors/0: required key [lastName] not found")).isTrue();
-            assertThat(validationMessages.contains("#/actors/1/lastName: string [dREBIN] does not match pattern ^\\p{Lu}\\p{Ll}+$")).isTrue();
-            assertThat(validationMessages.contains("#/duration: string [123] does not match pattern ^\\s*(?:(?:\\d+)\\s*w)?\\s*(?:(?:\\d+)\\s*d)?\\s*(?:(?:\\d+)\\s*h)?\\s*(?:(?:\\d+)\\s*m)?\\s*(?:(?:\\d+)\\s*s)?\\s*$")).isTrue();
-            assertThat(14).isEqualTo(validationMessages.size());
+            validationMessages.stream().sorted().forEach(System.out::println);
+            assertThat(validationMessages).containsExactlyInAnyOrder(
+                    "#/actors/0/age: -77.0 is not higher or equal to 0",
+                    "#/actors/0/dateOfBirth: string [1942-42-13] does not match pattern \\d{4}-(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|[1-2][0-9]|3[0-1])",
+                    "#/actors/0/firstName: string [?] does not match pattern ^\\p{Lu}\\p{Ll}+$",
+                    "#/actors/0: required key [lastName] not found",
+                    "#/actors/1/lastName: string [dREBIN] does not match pattern ^\\p{Lu}\\p{Ll}+$",
+                    "#/aspect-ratio: string [555] does not match pattern ^\\d+(\\.\\d+)?\\:\\d+(\\.\\d+)?$",
+                    "#/created: [yesterday] is not a valid date-time. Expected [yyyy-MM-dd'T'HH:mm:ssZ, yyyy-MM-dd'T'HH:mm:ss.[0-9]{1,9}Z]",
+                    "#/duration: string [123] does not match pattern ^\\s*(?:(?:\\d+)\\s*w)?\\s*(?:(?:\\d+)\\s*d)?\\s*(?:(?:\\d+)\\s*h)?\\s*(?:(?:\\d+)\\s*m)?\\s*(?:(?:\\d+)\\s*s)?\\s*$",
+                    "#/genres/0: expected type: String, found: Integer",
+                    "#/metadata/something: expected type: String, found: Boolean",
+                    "#/ratings/IMDB: -8.2 is not higher or equal to 0",
+                    "#/year: expected type: Integer, found: Double",
+                    "#: extraneous key [nobodyExpects] is not permitted",
+                    "#: required key [title] not found"
+            );
         }
     }
 }

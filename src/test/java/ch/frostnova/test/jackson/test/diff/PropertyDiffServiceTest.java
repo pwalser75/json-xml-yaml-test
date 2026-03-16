@@ -13,7 +13,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class PropertyDiffServiceTest {
+class PropertyDiffServiceTest {
 
     private final ObjectMapper objectMapper = ObjectMappers.json();
 
@@ -23,7 +23,7 @@ public class PropertyDiffServiceTest {
     private Movie after;
 
     @BeforeEach
-    public void init() {
+    void init() {
         before = Movie.create();
         after = clone(before);
     }
@@ -40,15 +40,15 @@ public class PropertyDiffServiceTest {
     }
 
     @Test
-    public void shouldListPropertyPaths() {
+    void shouldListPropertyPaths() {
 
         Map<String, String> propertyPaths = propertyDiffService.listPropertyPaths(before);
         propertyPaths.forEach((propertyPath, value) ->
-                System.out.printf("%s = %s\n", propertyPath, value));
+                System.out.printf("%s = %s%n", propertyPath, value));
     }
 
     @Test
-    public void shouldDetectChanges() {
+    void shouldDetectChanges() {
 
         before.setSynopsis(null);
 

@@ -28,9 +28,9 @@ import static java.util.stream.Collectors.joining;
 
 public final class DurationConverter {
 
-    private final static BinaryOperator<String> TOKEN_PATTERN = (name, unit) -> String.format("(?:(?<%s>\\d+)\\s*%s)?", name, unit);
+    private static final BinaryOperator<String> TOKEN_PATTERN = (name, unit) -> String.format("(?:(?<%s>\\d+)\\s*%s)?", name, unit);
 
-    private final static Pattern PATTERN = Pattern.compile("^\\s*" + join("\\s*",
+    private static final Pattern PATTERN = Pattern.compile("^\\s*" + join("\\s*",
             TOKEN_PATTERN.apply("weeks", "w"),
             TOKEN_PATTERN.apply("days", "d"),
             TOKEN_PATTERN.apply("hours", "h"),
@@ -39,7 +39,7 @@ public final class DurationConverter {
     ) + "\\s*$");
 
     private static Duration parse(String value) {
-        if (value == null || value.trim().length() == 0) {
+        if (value == null || value.isBlank()) {
             return Duration.ofSeconds(0);
         }
         Matcher matcher = PATTERN.matcher(value);
@@ -103,7 +103,7 @@ public final class DurationConverter {
         @Override
         public Duration deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
             String string = jsonParser.getValueAsString();
-            if (string == null || string.trim().length() == 0) {
+            if (string == null || string.isBlank()) {
                 return null;
             }
             return parse(string);

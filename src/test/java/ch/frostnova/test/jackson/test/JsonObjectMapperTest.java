@@ -20,10 +20,10 @@ import static org.assertj.core.api.InstanceOfAssertFactories.LIST;
  * @author pwalser
  * @since 2018-01-05
  */
-public class JsonObjectMapperTest {
+class JsonObjectMapperTest {
 
     @Test
-    public void testStringify() throws IOException {
+    void testStringify() throws IOException {
         ObjectMapper objectMapper = ObjectMappers.json();
 
         assertThat(objectMapper.writeValueAsString(null)).isEqualTo("null");
@@ -47,14 +47,14 @@ public class JsonObjectMapperTest {
     }
 
     @Test
-    public void testParse() throws IOException {
+    void testParse() throws IOException {
         ObjectMapper objectMapper = ObjectMappers.json();
 
         assertThat(objectMapper.readValue("null", Object.class)).isNull();
         assertThat(objectMapper.readValue("123", Integer.class)).isEqualTo(Integer.valueOf(123));
         assertThat(objectMapper.readValue("\"456\"", String.class)).isEqualTo("456");
-        assertThat(objectMapper.readValue("true", Boolean.class)).isEqualTo(Boolean.TRUE);
-        assertThat(objectMapper.readValue("\"\"", String.class)).isEqualTo("");
+        assertThat(objectMapper.readValue("true", Boolean.class)).isTrue();
+        assertThat(objectMapper.readValue("\"\"", String.class)).isEmpty();
 
         // arrays
         assertThat(objectMapper.readValue("[1,2,3,4,5]", LinkedList.class)).containsExactly(1, 2, 3, 4, 5);

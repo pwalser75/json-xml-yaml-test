@@ -22,8 +22,8 @@ import java.util.regex.Pattern;
 @JsonDeserialize(using = AspectRatio.AspectRatioDeserializer.class)
 public class AspectRatio {
 
-    private final static Pattern PATTERN = Pattern.compile("\\s*(\\d+(?:\\.\\d+)?)\\s*:\\s*(\\d+(?:\\.\\d+)?)\\s*");
-    private final static DecimalFormat numberFormat = new DecimalFormat("0.##", new DecimalFormatSymbols(Locale.US));
+    private static final Pattern PATTERN = Pattern.compile("\\s*(\\d+(?:\\.\\d+)?)\\s*:\\s*(\\d+(?:\\.\\d+)?)\\s*");
+    private static final DecimalFormat numberFormat = new DecimalFormat("0.##", new DecimalFormatSymbols(Locale.US));
     private final double width;
     private final double height;
 

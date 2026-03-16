@@ -17,9 +17,9 @@ import static org.assertj.core.data.Offset.offset;
  * @author pwalser
  * @since 06.07.2018
  */
-public class AspectRatioTest {
+class AspectRatioTest {
 
-    private final static Offset EPSILON = offset(1e-10);
+    private static final Offset<Double> EPSILON = offset(1e-10);
 
     @Test
     void testSimple() {
@@ -27,7 +27,7 @@ public class AspectRatioTest {
         assertThat(aspectRatio.getWidth()).isCloseTo(16, EPSILON);
         assertThat(aspectRatio.getHeight()).isCloseTo(9, EPSILON);
         assertThat(aspectRatio.getAspect()).isCloseTo(16d / 9, EPSILON);
-        assertThat(aspectRatio.toString()).isEqualTo("16:9");
+        assertThat(aspectRatio).hasToString("16:9");
     }
 
     @Test
@@ -39,7 +39,7 @@ public class AspectRatioTest {
         assertThat(normalized.getWidth()).isCloseTo(1.7777777777777777, EPSILON);
         assertThat(normalized.getHeight()).isCloseTo(1, EPSILON);
         assertThat(normalized.getAspect()).isCloseTo(16d / 9, EPSILON);
-        assertThat(normalized.toString()).isEqualTo("1.78:1");
+        assertThat(normalized).hasToString("1.78:1");
     }
 
     @Test

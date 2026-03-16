@@ -13,6 +13,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * Prototype: create a value diff between two DTOs.
  *
@@ -28,8 +30,8 @@ public class PropertyDiffService {
     }
 
     public <T> List<PropertyDiff> diff(T before, T after) {
-        Objects.requireNonNull(before, "before is required");
-        Objects.requireNonNull(after, "after is required");
+        requireNonNull(before, "before is required");
+        requireNonNull(after, "after is required");
 
         Map<String, String> beforeValues = listPropertyPaths(before);
         Map<String, String> afterValues = listPropertyPaths(after);

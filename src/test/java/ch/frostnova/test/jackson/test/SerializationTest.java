@@ -22,38 +22,38 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author pwalser
  * @since 22.06.2018
  */
-public class SerializationTest {
+class SerializationTest {
 
-    private final static DecimalFormat NUMBER_FORMAT = new DecimalFormat("0.##");
-    private final static long benchmarkTimeMs = 500;
+    private static final DecimalFormat NUMBER_FORMAT = new DecimalFormat("0.##");
+    private static final long benchmarkTimeMs = 500;
 
     @Test
-    public void testJSON() throws IOException {
+    void testJSON() throws IOException {
         testFormat("JSON", ObjectMappers.json(), false);
     }
 
     @Test
-    public void testYAML() throws IOException {
+    void testYAML() throws IOException {
         testFormat("YAML", ObjectMappers.yaml(), false);
     }
 
     @Test
-    public void testXML() throws IOException {
+    void testXML() throws IOException {
         testFormat("XML", ObjectMappers.xml(), false);
     }
 
     @Test
-    public void testCBOR() throws IOException {
+    void testCBOR() throws IOException {
         testFormat("CBOR", ObjectMappers.cbor(), true);
     }
 
     @Test
-    public void testProperties() throws IOException {
+    void testProperties() throws IOException {
         testFormat("PROPERTIES", ObjectMappers.properties(), false);
     }
 
     @Test
-    public void testCSV() throws IOException {
+    void testCSV() throws IOException {
 
         Movie movie = Movie.create();
 

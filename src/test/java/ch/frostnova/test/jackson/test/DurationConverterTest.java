@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author pwalser
  * @since 06.07.2018
  */
-public class DurationConverterTest {
+class DurationConverterTest {
 
     private static final ObjectMapper objectMapper;
 
@@ -29,7 +29,7 @@ public class DurationConverterTest {
     }
 
     @Test
-    public void testSerialize() throws IOException {
+    void testSerialize() throws IOException {
         assertThat(objectMapper.writeValueAsString(Duration.ofNanos(0))).isEqualTo("\"0s\"");
         assertThat(objectMapper.writeValueAsString(Duration.ofSeconds(12345))).isEqualTo("\"3h 25m 45s\"");
         assertThat(objectMapper.writeValueAsString(Duration.ofDays(9).plus(Duration.ofHours(3)).plus(Duration.ofMinutes(4)).plus(Duration.ofSeconds(5)))).isEqualTo("\"1w 2d 3h 4m 5s\"");
@@ -38,7 +38,7 @@ public class DurationConverterTest {
     }
 
     @Test
-    public void testDeserialize() throws IOException {
+    void testDeserialize() throws IOException {
         assertThat(objectMapper.readValue("\"\"", Duration.class)).isNull();
         assertThat(objectMapper.readValue("\"0s\"", Duration.class)).isEqualTo(Duration.ofSeconds(0));
         assertThat(objectMapper.readValue("\"0m\"", Duration.class)).isEqualTo(Duration.ofSeconds(0));
