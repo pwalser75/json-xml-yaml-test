@@ -8,9 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-import java.util.Map;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 class PropertyDiffServiceTest {
@@ -42,7 +39,7 @@ class PropertyDiffServiceTest {
     @Test
     void shouldListPropertyPaths() {
 
-        Map<String, String> propertyPaths = propertyDiffService.listPropertyPaths(before);
+        var propertyPaths = propertyDiffService.listPropertyPaths(before);
         propertyPaths.forEach((propertyPath, value) ->
                 System.out.printf("%s = %s%n", propertyPath, value));
     }
@@ -58,10 +55,10 @@ class PropertyDiffServiceTest {
         after.getActors().remove(after.getActors().size() - 1);
         after.getMetadata().set("new", "value");
 
-        List<PropertyDiffService.PropertyDiff> diff = propertyDiffService.diff(before, after);
+        var diff = propertyDiffService.diff(before, after);
         diff.forEach(System.out::println);
 
-        Integer age = before.getActors().get(2).getAge();
+        var age = before.getActors().get(2).getAge();
 
         assertThat(diff).containsExactlyInAnyOrder(
                 new PropertyDiffService.PropertyDiff("aspect-ratio", "2.39:1", "4:3"),

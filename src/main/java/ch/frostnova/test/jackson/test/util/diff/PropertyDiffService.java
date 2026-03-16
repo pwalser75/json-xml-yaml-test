@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -33,36 +32,33 @@ public class PropertyDiffService {
         requireNonNull(before, "before is required");
         requireNonNull(after, "after is required");
 
-        Map<String, String> beforeValues = listPropertyPaths(before);
-        Map<String, String> afterValues = listPropertyPaths(after);
+        var beforeValues = listPropertyPaths(before);
+        var afterValues = listPropertyPaths(after);
 
         List<PropertyDiff> result = new ArrayList<>();
 
-        Set<String> commonPropertyPaths = new TreeSet<>();
-        commonPropertyPaths.addAll(beforeValues.keySet());
+        Set<String> commonPropertyPaths = new TreeSet<>(beforeValues.keySet());
         commonPropertyPaths.retainAll(afterValues.keySet());
 
-        Set<String> addedPropertyPaths = new TreeSet<>();
-        addedPropertyPaths.addAll(afterValues.keySet());
+        Set<String> addedPropertyPaths = new TreeSet<>(afterValues.keySet());
         addedPropertyPaths.removeAll(beforeValues.keySet());
 
-        Set<String> removedPropertyPaths = new TreeSet<>();
-        removedPropertyPaths.addAll(beforeValues.keySet());
+        Set<String> removedPropertyPaths = new TreeSet<>(beforeValues.keySet());
         removedPropertyPaths.removeAll(afterValues.keySet());
 
-        for (String propertyPath : commonPropertyPaths) {
-            String beforeValue = beforeValues.get(propertyPath);
-            String afterValue = afterValues.get(propertyPath);
+        for (var propertyPath : commonPropertyPaths) {
+            var beforeValue = beforeValues.get(propertyPath);
+            var afterValue = afterValues.get(propertyPath);
             if (!Objects.equals(beforeValue, afterValue)) {
                 result.add(new PropertyDiff(propertyPath, beforeValue, afterValue));
             }
         }
-        for (String propertyPath : addedPropertyPaths) {
-            String afterValue = afterValues.get(propertyPath);
+        for (var propertyPath : addedPropertyPaths) {
+            var afterValue = afterValues.get(propertyPath);
             result.add(new PropertyDiff(propertyPath, null, afterValue));
         }
-        for (String propertyPath : removedPropertyPaths) {
-            String beforeValue = beforeValues.get(propertyPath);
+        for (var propertyPath : removedPropertyPaths) {
+            var beforeValue = beforeValues.get(propertyPath);
             result.add(new PropertyDiff(propertyPath, beforeValue, null));
         }
         return result;
@@ -71,7 +67,7 @@ public class PropertyDiffService {
     public <T> Map<String, String> listPropertyPaths(T value) {
 
         try {
-            JsonNode root = objectMapper.readTree(objectMapper.writeValueAsString(value));
+            var root = objectMapper.readTree(objectMapper.writeValueAsString(value));
             Map<String, String> result = new TreeMap<>();
             listPropertyPaths("", root, result);
             return result;
@@ -92,13 +88,13 @@ public class PropertyDiffService {
         } else if (jsonNode.isTextual()) {
             result.put(basePath, jsonNode.textValue());
         } else if (jsonNode.isArray()) {
-            for (int i = 0; i < jsonNode.size(); i++) {
+            for (var i = 0; i < jsonNode.size(); i++) {
                 listPropertyPaths(String.format("%s[%d]", basePath, i), jsonNode.get(i), result);
             }
         } else if (jsonNode.isObject()) {
-            Iterator<String> fieldNames = jsonNode.fieldNames();
+            var fieldNames = jsonNode.fieldNames();
             while (fieldNames.hasNext()) {
-                String fieldName = fieldNames.next();
+                var fieldName = fieldNames.next();
                 listPropertyPaths(basePath.isEmpty() ? fieldName : String.format("%s.%s", basePath, fieldName), jsonNode.get(fieldName), result);
             }
         }
@@ -141,7 +137,7 @@ public class PropertyDiffService {
             if (o == null || getClass() != o.getClass()) {
                 return false;
             }
-            PropertyDiff that = (PropertyDiff) o;
+            var that = (PropertyDiff) o;
             return Objects.equals(propertyPath, that.propertyPath) && Objects.equals(oldValue, that.oldValue) && Objects.equals(newValue, that.newValue);
         }
 

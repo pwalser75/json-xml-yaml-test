@@ -2,18 +2,20 @@ package ch.frostnova.test.jackson.test;
 
 import ch.frostnova.test.jackson.test.util.ObjectMappers;
 import ch.frostnova.test.jackson.test.util.domain.Movie;
+import ch.frostnova.test.jackson.test.util.serializer.JacksonSerializer;
+import ch.frostnova.test.jackson.test.util.serializer.MovieProtobufSerializer;
+import ch.frostnova.test.jackson.test.util.serializer.Serializer;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.MappingIterator;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -28,36 +30,41 @@ class SerializationTest {
     private static final long benchmarkTimeMs = 500;
 
     @Test
-    void testJSON() throws IOException {
-        testFormat("JSON", ObjectMappers.json(), false);
+    void testJSON() {
+        testFormat("JSON", new JacksonSerializer<>(ObjectMappers.json(), Movie.class), false);
     }
 
     @Test
-    void testYAML() throws IOException {
-        testFormat("YAML", ObjectMappers.yaml(), false);
+    void testYAML() {
+        testFormat("YAML", new JacksonSerializer<>(ObjectMappers.yaml(), Movie.class), false);
     }
 
     @Test
-    void testXML() throws IOException {
-        testFormat("XML", ObjectMappers.xml(), false);
+    void testXML() {
+        testFormat("XML", new JacksonSerializer<>(ObjectMappers.xml(), Movie.class), false);
     }
 
     @Test
-    void testCBOR() throws IOException {
-        testFormat("CBOR", ObjectMappers.cbor(), true);
+    void testCBOR() {
+        testFormat("CBOR", new JacksonSerializer<>(ObjectMappers.cbor(), Movie.class), true);
     }
 
     @Test
-    void testProperties() throws IOException {
-        testFormat("PROPERTIES", ObjectMappers.properties(), false);
+    void testProperties() {
+        testFormat("PROPERTIES", new JacksonSerializer<>(ObjectMappers.properties(), Movie.class), false);
+    }
+
+    @Test
+    void testProtobuf() {
+        testFormat("PROTOBUF", new MovieProtobufSerializer(), true);
     }
 
     @Test
     void testCSV() throws IOException {
 
-        Movie movie = Movie.create();
+        var movie = Movie.create();
 
-        CsvSchema schema = CsvSchema.builder()
+        var schema = CsvSchema.builder()
                 .setUseHeader(true)
                 .addColumn("title")
                 .addColumn("year")
@@ -66,17 +73,17 @@ class SerializationTest {
                 .addColumn("created")
                 .build();
 
-        CsvMapper mapper = new CsvMapper();
+        var mapper = new CsvMapper();
         ObjectMappers.configure(mapper);
         mapper.configure(JsonGenerator.Feature.IGNORE_UNKNOWN, true);
         mapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector());
 
-        String serialized = mapper.writerFor(Movie.class).with(schema).writeValueAsString(movie);
+        var serialized = mapper.writerFor(Movie.class).with(schema).writeValueAsString(movie);
         System.out.println(serialized);
 
         MappingIterator<Movie> iter = mapper.readerFor(Movie.class).with(schema).readValues(serialized);
         assertThat(iter.hasNext()).isTrue();
-        Movie restored = iter.next();
+        var restored = iter.next();
         System.out.println(ObjectMappers.json().writeValueAsString(restored));
         assertThat(restored.getTitle()).isEqualTo(movie.getTitle());
         assertThat(restored.getYear()).isEqualTo(movie.getYear());
@@ -84,94 +91,76 @@ class SerializationTest {
         assertThat(restored.getGenres()).isEqualTo(movie.getGenres());
 
         assertThat(iter.hasNext()).isFalse();
-
     }
 
-    void testFormat(String displayName, ObjectMapper objectMapper, boolean isBinary) throws IOException {
+    void testFormat(String displayName, Serializer<Movie> serializer, boolean binary) {
+        var value = Movie.create();
+        testSerialize(serializer, binary);
+        benchmark(serializer, value);
+    }
 
-        System.out.println("Testing format: " + displayName);
-        if (isBinary) {
-            testSerializeBinary(objectMapper);
+    private void testSerialize(Serializer<Movie> serializer, boolean binary) {
+        var movie = Movie.create();
+        var serialized = serializer.serialize(movie);
+        if (binary) {
+            System.out.println(formatHex(serialized));
         } else {
-            testSerializeText(objectMapper);
+            System.out.println(new String(serialized, UTF_8));
         }
-        benchmark(objectMapper);
-    }
 
-    private void testSerializeBinary(ObjectMapper objectMapper) throws IOException {
-
-        Movie movie = Movie.create();
-        byte[] serialized = objectMapper.writeValueAsBytes(movie);
-        System.out.println(serialized.length + " bytes");
-
-        ByteArrayInputStream in = new ByteArrayInputStream(serialized);
-        int index = 0;
-        int read;
-        while ((read = in.read()) >= 0) {
-            String hex = Integer.toHexString(read).toUpperCase();
-            while (hex.length() < 2) {
-                hex = '0' + hex;
-            }
-            System.out.print(hex + " ");
-            index++;
-            if (index % 32 == 0) {
-                System.out.println();
-            }
-        }
-        System.out.println();
-
-        Movie parsed = objectMapper.readValue(serialized, Movie.class);
+        var parsed = serializer.deserialize(serialized);
         verifyParsed(movie, parsed);
     }
 
-    private void testSerializeText(ObjectMapper objectMapper) throws IOException {
-
-        Movie movie = Movie.create();
-        System.out.println(objectMapper.writeValueAsBytes(movie).length + " bytes");
-        String serialized = objectMapper.writeValueAsString(movie);
-        System.out.println(serialized);
-        Movie parsed = objectMapper.readValue(serialized, Movie.class);
-        verifyParsed(movie, parsed);
+    private String formatHex(byte[] data) {
+        var out = new StringBuilder();
+        for (int i = 0; i < data.length; i++) {
+            if (i > 0 && (i & 31) == 0) {
+                out.append("\n");
+            }
+            var hex = Integer.toHexString((data[i] + 256) & 0xFF).toUpperCase();
+            if (hex.length() < 2) out.append('0');
+            out.append(hex);
+            out.append(" ");
+        }
+        return out.toString();
     }
 
-    private void benchmark(ObjectMapper objectMapper) throws IOException {
+    private <T> void benchmark(Serializer<T> serializer, T value) {
 
-        Movie movie = Movie.create();
-        long benchmarkTimeNs = benchmarkTimeMs * 1000000L;
+        var benchmarkTimeNs = benchmarkTimeMs * 1000000L;
 
         //warmup
-        for (int i = 0; i < 100; i++) {
-            byte[] serialized = objectMapper.writeValueAsBytes(movie);
-            objectMapper.readValue(serialized, Movie.class);
-        }
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        for (var i = 0; i < 1000; i++) {
+            var serialized = serializer.serialize(value);
+            serializer.deserialize(serialized);
         }
 
-        long time = System.nanoTime();
-        long endTime = System.nanoTime() + benchmarkTimeNs;
+        var time = System.nanoTime();
+        var endTime = System.nanoTime() + benchmarkTimeNs;
         long samples = 0;
         while (System.nanoTime() < endTime) {
-            objectMapper.writeValueAsBytes(movie);
+            serializer.serialize(value);
             samples++;
         }
         time = System.nanoTime() - time;
-        System.out.println(NUMBER_FORMAT.format(time / samples / 1000d) + " µS serialization (" + samples + " samples)");
+        var serializationTimeNs = time / samples;
 
-        byte[] serialized = objectMapper.writeValueAsBytes(movie);
+        var serialized = serializer.serialize(value);
         time = System.nanoTime();
 
         endTime = System.nanoTime() + benchmarkTimeNs;
         samples = 0;
         while (System.nanoTime() < endTime) {
-            objectMapper.readValue(serialized, Movie.class);
+            serializer.deserialize(serialized);
             samples++;
         }
 
         time = System.nanoTime() - time;
-        System.out.println(NUMBER_FORMAT.format(time / samples / 1000d) + " µS deserialization (" + samples + " samples)");
+        var deserializationTimeNs = time / samples;
+        var sizeBytes = serializer.serialize(value).length;
+
+        System.out.printf("%d bytes, %.2f µS serialization, %.2f µS deserialization%n", sizeBytes, serializationTimeNs * 0.001, deserializationTimeNs * 0.001);
     }
 
     private void verifyParsed(Movie original, Movie parsed) {
@@ -185,7 +174,7 @@ class SerializationTest {
         assertThat(parsed.getRatings()).containsExactlyInAnyOrderEntriesOf(original.getRatings());
         assertThat(parsed.getActors()).containsExactlyElementsOf(original.getActors());
         assertThat(parsed.getMetadata().getKeys()).containsExactlyInAnyOrderElementsOf(original.getMetadata().getKeys());
-        for (String key : original.getMetadata().getKeys()) {
+        for (var key : original.getMetadata().getKeys()) {
             assertThat(parsed.getMetadata().get(key)).isEqualTo(original.getMetadata().get(key));
         }
     }

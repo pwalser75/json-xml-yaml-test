@@ -21,7 +21,7 @@ import java.util.TreeMap;
 @JsonDeserialize(using = MetadataConverter.Deserializer.class)
 public class Metadata {
 
-    final private Map<String, String> metadata = new TreeMap<>();
+    private final Map<String, String> metadata = new TreeMap<>();
 
     /**
      * Get a metadata value

@@ -1,7 +1,6 @@
 package ch.frostnova.test.jackson.test;
 
 import ch.frostnova.test.jackson.test.util.ObjectMappers;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -24,7 +23,7 @@ class JsonObjectMapperTest {
 
     @Test
     void testStringify() throws IOException {
-        ObjectMapper objectMapper = ObjectMappers.json();
+        var objectMapper = ObjectMappers.json();
 
         assertThat(objectMapper.writeValueAsString(null)).isEqualTo("null");
 
@@ -48,7 +47,7 @@ class JsonObjectMapperTest {
 
     @Test
     void testParse() throws IOException {
-        ObjectMapper objectMapper = ObjectMappers.json();
+        var objectMapper = ObjectMappers.json();
 
         assertThat(objectMapper.readValue("null", Object.class)).isNull();
         assertThat(objectMapper.readValue("123", Integer.class)).isEqualTo(Integer.valueOf(123));

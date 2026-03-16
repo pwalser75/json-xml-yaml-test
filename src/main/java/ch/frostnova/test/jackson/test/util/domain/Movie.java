@@ -11,9 +11,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -36,7 +35,7 @@ public class Movie {
     @JsonProperty("created")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JacksonXmlProperty(isAttribute = true, localName = "created")
-    private ZonedDateTime created = ZonedDateTime.now().truncatedTo(ChronoUnit.SECONDS).withZoneSameInstant(ZoneId.of("UTC"));
+    private Instant created = Instant.now().truncatedTo(ChronoUnit.SECONDS);
 
     @JsonProperty("title")
     @JacksonXmlProperty(localName = "title")
@@ -97,11 +96,11 @@ public class Movie {
                 .get();
     }
 
-    public ZonedDateTime getCreated() {
+    public Instant getCreated() {
         return created;
     }
 
-    public void setCreated(ZonedDateTime created) {
+    public void setCreated(Instant created) {
         this.created = created;
     }
 

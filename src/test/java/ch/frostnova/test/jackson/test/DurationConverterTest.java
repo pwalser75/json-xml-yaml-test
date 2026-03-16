@@ -22,7 +22,7 @@ class DurationConverterTest {
 
     static {
         objectMapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule();
+        var module = new SimpleModule();
         module.addSerializer(Duration.class, new DurationConverter.Serializer());
         module.addDeserializer(Duration.class, new DurationConverter.Deserializer());
         objectMapper.registerModule(module);

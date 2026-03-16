@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'com.github.ben-manes.versions' version '0.42.0'
+    id 'com.google.protobuf' version '0.9.4'
 }
 apply plugin: 'java'
 
@@ -42,6 +43,8 @@ ext {
     slf4jVersion = '2.0.17'
     logbackVersion = '1.5.32'
     jsonSchemaValidatorVersion = '1.5.1'
+    protobufVersion = '3.25.5'
+    mapstructVersion = '1.6.3'
 
     libs = [
             jackson    : [
@@ -55,6 +58,8 @@ ext {
             csv        : "com.fasterxml.jackson.dataformat:jackson-dataformat-csv:${jacksonVersion}",
             properties : "com.fasterxml.jackson.dataformat:jackson-dataformat-properties:${jacksonVersion}",
             jsonSchema : "org.everit.json:org.everit.json.schema:${jsonSchemaValidatorVersion}",
+            protobuf   : "com.google.protobuf:protobuf-java:${protobufVersion}",
+            mapstruct  : "org.mapstruct:mapstruct:${mapstructVersion}",
             testbase   : [
                     "org.junit.jupiter:junit-jupiter:$junitVersion",
                     "org.assertj:assertj-core:${assertjVersion}",
@@ -71,6 +76,20 @@ ext {
     ]
 }
 
+sourceSets {
+    main {
+        proto {
+            srcDir 'src/main/protobuf'
+        }
+    }
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:${protobufVersion}"
+    }
+}
+
 dependencies {
     implementation libs.jackson
     implementation libs.xml
@@ -79,6 +98,9 @@ dependencies {
     implementation libs.properties
     implementation libs.csv
     implementation libs.jsonSchema
+    implementation libs.protobuf
+    implementation libs.mapstruct
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
     implementation libs.loggingAPI
     implementation libs.loggingImpl
 

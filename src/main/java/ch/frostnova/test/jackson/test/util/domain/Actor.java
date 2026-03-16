@@ -74,7 +74,7 @@ public class Actor {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Actor actor = (Actor) o;
+        var actor = (Actor) o;
         return Objects.equals(firstName, actor.firstName) &&
                 Objects.equals(lastName, actor.lastName) &&
                 Objects.equals(birthDate, actor.birthDate);

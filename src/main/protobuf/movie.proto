@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+option java_package = "ch.frostnova.test.jackson.test.proto";
+option java_outer_classname = "MovieProtos";
+option java_multiple_files = false;
+
+// Represents ch.frostnova.test.jackson.test.util.domain.Actor
+message ActorMessage {
+  string first_name = 1;
+  string last_name = 2;
+  string birth_date = 3; // ISO-8601 date: yyyy-MM-dd
+}
+
+// Mirrors ch.frostnova.test.jackson.test.util.domain.Genre
+enum GenreValue {
+  SCI_FI = 0;
+  THRILLER = 1;
+  ACTION = 2;
+  COMEDY = 3;
+  ADVENTURE = 4;
+  FANTASY = 5;
+}
+
+// Represents ch.frostnova.test.jackson.test.util.domain.Movie
+message MovieMessage {
+  int64 created = 1;           // Epoch Ms
+  string title = 2;
+  int32 year = 3;
+  repeated GenreValue genres = 4;
+  map<string, double> ratings = 5;
+  string synopsis = 6;
+  repeated ActorMessage actors = 7;
+  string aspect_ratio = 8;      // e.g. "2.39:1"
+  int64 duration_seconds = 9;   // Duration in total seconds
+  map<string, string> metadata = 10;
+}

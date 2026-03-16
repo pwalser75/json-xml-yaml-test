@@ -51,7 +51,7 @@ public final class ObjectMappers {
 
     public static ObjectMapper json() {
         return objectMappers.computeIfAbsent(JSON, type -> {
-            ObjectMapper mapper = new ObjectMapper();
+            var mapper = new ObjectMapper();
             mapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector());
             return configure(mapper);
         });
@@ -59,7 +59,7 @@ public final class ObjectMappers {
 
     public static ObjectMapper yaml() {
         return objectMappers.computeIfAbsent(YAML, type -> {
-            ObjectMapper mapper = new ObjectMapper(new YAMLFactory().enable(MINIMIZE_QUOTES));
+            var mapper = new ObjectMapper(new YAMLFactory().enable(MINIMIZE_QUOTES));
             mapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector());
             return configure(mapper);
         });
@@ -67,16 +67,16 @@ public final class ObjectMappers {
 
     public static ObjectMapper xml() {
         return objectMappers.computeIfAbsent(XML, type -> {
-            JacksonXmlModule xmlModule = new JacksonXmlModule();
+            var xmlModule = new JacksonXmlModule();
             xmlModule.setDefaultUseWrapper(false);
-            XmlMapper mapper = new XmlMapper(xmlModule);
+            var mapper = new XmlMapper(xmlModule);
             return configure(mapper);
         });
     }
 
     public static ObjectMapper cbor() {
         return objectMappers.computeIfAbsent(CBOR, type -> {
-            ObjectMapper mapper = new ObjectMapper(new CBORFactory());
+            var mapper = new ObjectMapper(new CBORFactory());
             mapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector());
             return configure(mapper);
         });

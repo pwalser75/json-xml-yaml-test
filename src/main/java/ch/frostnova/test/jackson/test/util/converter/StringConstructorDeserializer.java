@@ -3,7 +3,6 @@ package ch.frostnova.test.jackson.test.util.converter;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.fasterxml.jackson.databind.jsontype.TypeDeserializer;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -39,7 +38,7 @@ public abstract class StringConstructorDeserializer<T> extends StdDeserializer<T
     @Override
     public T deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
 
-        String string = p.getValueAsString();
+        var string = p.getValueAsString();
         if (string == null || string.isBlank()) {
             return null;
         }

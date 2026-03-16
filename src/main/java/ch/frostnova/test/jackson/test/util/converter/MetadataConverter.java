@@ -27,9 +27,9 @@ public final class MetadataConverter {
         public void serialize(Metadata metadata, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
             if (metadata != null) {
                 jsonGenerator.writeStartObject();
-                for (String key : metadata.getKeys()) {
+                for (var key : metadata.getKeys()) {
                     jsonGenerator.writeFieldName(key);
-                    Optional<String> value = metadata.get(key);
+                    var value = metadata.get(key);
                     if (value.isPresent()) {
                         jsonGenerator.writeObject(value.get());
                     } else {
@@ -45,10 +45,10 @@ public final class MetadataConverter {
 
         @Override
         public Metadata deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
-            Metadata metadata = new Metadata();
+            var metadata = new Metadata();
             JsonNode node = jsonParser.getCodec().readTree(jsonParser);
             node.fieldNames().forEachRemaining(field -> {
-                JsonNode value = node.get(field);
+                var value = node.get(field);
                 metadata.set(field, Optional.ofNullable(value).map(JsonNode::asText).orElse(null));
             });
             return metadata;

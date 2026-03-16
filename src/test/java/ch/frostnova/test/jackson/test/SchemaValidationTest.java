@@ -11,7 +11,6 @@ import org.json.JSONTokener;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,9 +24,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 class SchemaValidationTest {
 
     private Schema getSchema() {
-        JSONObject jsonSchema = new JSONObject(new JSONTokener(getClass().getResourceAsStream("/Movie.schema.json")));
+        var jsonSchema = new JSONObject(new JSONTokener(getClass().getResourceAsStream("/Movie.schema.json")));
 
-        SchemaLoader loader = SchemaLoader.builder()
+        var loader = SchemaLoader.builder()
                 .schemaJson(jsonSchema)
                 .build();
         return loader.load().build();
@@ -36,22 +35,22 @@ class SchemaValidationTest {
     @Test
     void testSchemaValidation() throws IOException {
 
-        Movie movie = Movie.create();
-        String json = ObjectMappers.json().writeValueAsString(movie);
-        JSONObject root = new JSONObject(new JSONTokener(json));
+        var movie = Movie.create();
+        var json = ObjectMappers.json().writeValueAsString(movie);
+        var root = new JSONObject(new JSONTokener(json));
 
         getSchema().validate(root);
     }
 
     @Test
     void testSchemaValidationValid() {
-        JSONObject root = new JSONObject(new JSONTokener(getClass().getResourceAsStream("/test-data/movie-valid.json")));
+        var root = new JSONObject(new JSONTokener(getClass().getResourceAsStream("/test-data/movie-valid.json")));
         getSchema().validate(root);
     }
 
     @Test
     void testSchemaValidationInvalid() {
-        JSONObject root = new JSONObject(new JSONTokener(getClass().getResourceAsStream("/test-data/movie-invalid.json")));
+        var root = new JSONObject(new JSONTokener(getClass().getResourceAsStream("/test-data/movie-invalid.json")));
 
         try {
             getSchema().validate(root);
@@ -59,7 +58,7 @@ class SchemaValidationTest {
         } catch (ValidationException ex) {
             ex.getAllMessages().forEach(System.out::println);
 
-            Set<String> validationMessages = ex.getAllMessages().stream().map(String::valueOf).collect(Collectors.toSet());
+            var validationMessages = ex.getAllMessages().stream().map(String::valueOf).collect(Collectors.toSet());
             validationMessages.stream().sorted().forEach(System.out::println);
             assertThat(validationMessages).containsExactlyInAnyOrder(
                     "#/actors/0/age: -77.0 is not higher or equal to 0",

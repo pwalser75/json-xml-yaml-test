@@ -9,7 +9,6 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -32,7 +31,7 @@ public class AspectRatio {
         if (formatted == null) {
             throw new IllegalArgumentException("Aspect ratio is required");
         }
-        Matcher matcher = PATTERN.matcher(formatted);
+        var matcher = PATTERN.matcher(formatted);
         if (!matcher.matches()) {
             throw new IllegalArgumentException("Illegal aspect ratio: " + formatted);
         }
@@ -76,7 +75,7 @@ public class AspectRatio {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        AspectRatio other = (AspectRatio) o;
+        var other = (AspectRatio) o;
         return Objects.equals(getAspect(), other.getAspect());
     }
 

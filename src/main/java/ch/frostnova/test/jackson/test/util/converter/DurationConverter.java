@@ -13,7 +13,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.lang.String.join;
@@ -42,7 +41,7 @@ public final class DurationConverter {
         if (value == null || value.isBlank()) {
             return Duration.ofSeconds(0);
         }
-        Matcher matcher = PATTERN.matcher(value);
+        var matcher = PATTERN.matcher(value);
         if (!matcher.matches()) {
             throw new IllegalArgumentException(String.format("Illegal duration format '%s', expected '1w2d3h4m5s' or '1w 2d 3h 4m 5s' format (w=weeks,d=days,h=hours,m=minutes,s=seconds)", value));
         }
@@ -58,11 +57,11 @@ public final class DurationConverter {
         if (duration == null) {
             return "0s";
         }
-        long seconds = duration.getSeconds();
-        long minutes = seconds / 60;
-        long hours = minutes / 60;
-        long days = hours / 24;
-        long weeks = days / 7;
+        var seconds = duration.getSeconds();
+        var minutes = seconds / 60;
+        var hours = minutes / 60;
+        var days = hours / 24;
+        var weeks = days / 7;
         seconds %= 60;
         minutes %= 60;
         hours %= 24;
@@ -102,7 +101,7 @@ public final class DurationConverter {
 
         @Override
         public Duration deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
-            String string = jsonParser.getValueAsString();
+            var string = jsonParser.getValueAsString();
             if (string == null || string.isBlank()) {
                 return null;
             }
