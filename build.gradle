@@ -14,8 +14,8 @@ repositories {
     jcenter()
 }
 
-sourceCompatibility = JavaVersion.VERSION_11
-targetCompatibility = JavaVersion.VERSION_11
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
 def isNonStable = { String version ->
     def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { it -> version.toUpperCase().contains(it) }
@@ -34,17 +34,18 @@ test {
 }
 
 ext {
-    junitVersion = '5.9.1'
-    assertjVersion = '3.23.1'
-    mockitoVersion = '4.8.0'
-    jacksonVersion = '2.13.4'
-    slf4jVersion = '2.0.2'
-    logbackVersion = '1.4.1'
+    junitVersion = '6.0.3'
+    assertjVersion = '3.27.7'
+    mockitoVersion = '5.23.0'
+    jacksonVersion = '2.21.0'
+    jacksonAnnotationVersion = '2.21'
+    slf4jVersion = '2.0.17'
+    logbackVersion = '1.5.32'
     jsonSchemaValidatorVersion = '1.5.1'
 
     libs = [
             jackson    : [
-                    "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}",
+                    "com.fasterxml.jackson.core:jackson-annotations:${jacksonAnnotationVersion}",
                     "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}",
                     "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
             ],
@@ -82,4 +83,5 @@ dependencies {
     implementation libs.loggingImpl
 
     testImplementation libs.testbase
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
