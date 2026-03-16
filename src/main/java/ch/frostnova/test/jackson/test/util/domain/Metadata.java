@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -19,7 +20,7 @@ import java.util.TreeMap;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonSerialize(using = MetadataConverter.Serializer.class)
 @JsonDeserialize(using = MetadataConverter.Deserializer.class)
-public class Metadata {
+public class Metadata implements Serializable {
 
     private final Map<String, String> metadata = new TreeMap<>();
 

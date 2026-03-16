@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Objects;
@@ -25,7 +26,7 @@ import java.util.stream.Stream;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JacksonXmlRootElement(localName = "actor")
 @JsonPropertyOrder({"firstName", "lastName", "dateOfBirth", "age"})
-public class Actor {
+public class Actor implements Serializable {
 
     private final String firstName;
 

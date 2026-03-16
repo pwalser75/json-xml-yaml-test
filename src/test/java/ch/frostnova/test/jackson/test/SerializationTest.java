@@ -3,6 +3,7 @@ package ch.frostnova.test.jackson.test;
 import ch.frostnova.test.jackson.test.util.ObjectMappers;
 import ch.frostnova.test.jackson.test.util.domain.Movie;
 import ch.frostnova.test.jackson.test.util.serializer.JacksonSerializer;
+import ch.frostnova.test.jackson.test.util.serializer.JavaClassicSerializer;
 import ch.frostnova.test.jackson.test.util.serializer.MovieProtobufSerializer;
 import ch.frostnova.test.jackson.test.util.serializer.Serializer;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -57,6 +58,11 @@ class SerializationTest {
     @Test
     void testProtobuf() {
         testFormat("PROTOBUF", new MovieProtobufSerializer(), true);
+    }
+
+    @Test
+    void testJavaClassic() {
+        testFormat("JAVA CLASSIC SERIALIZATION", new JavaClassicSerializer<>(Movie.class), true);
     }
 
     @Test

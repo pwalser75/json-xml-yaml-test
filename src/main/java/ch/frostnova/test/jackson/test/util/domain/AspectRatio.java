@@ -5,6 +5,7 @@ import ch.frostnova.test.jackson.test.util.converter.ToStringSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
@@ -19,7 +20,7 @@ import java.util.regex.Pattern;
  */
 @JsonSerialize(using = ToStringSerializer.class)
 @JsonDeserialize(using = AspectRatio.AspectRatioDeserializer.class)
-public class AspectRatio {
+public class AspectRatio implements Serializable {
 
     private static final Pattern PATTERN = Pattern.compile("\\s*(\\d+(?:\\.\\d+)?)\\s*:\\s*(\\d+(?:\\.\\d+)?)\\s*");
     private static final DecimalFormat numberFormat = new DecimalFormat("0.##", new DecimalFormatSymbols(Locale.US));

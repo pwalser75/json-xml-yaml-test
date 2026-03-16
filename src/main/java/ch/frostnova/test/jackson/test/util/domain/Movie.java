@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -30,7 +31,7 @@ import java.util.function.Consumer;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JacksonXmlRootElement(localName = "movie")
 @JsonPropertyOrder({"title", "year", "genres", "aspectRatio", "rating"})
-public class Movie {
+public class Movie implements Serializable {
 
     @JsonProperty("created")
     @JsonInclude(JsonInclude.Include.NON_NULL)
