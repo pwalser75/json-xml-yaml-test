@@ -22,6 +22,7 @@ public class JavaClassicSerializer<T> implements Serializer<T> {
             var objectOut = new ObjectOutputStream(byteOut);
             objectOut.writeObject(value);
             objectOut.flush();
+            objectOut.close();
             return byteOut.toByteArray();
         });
     }

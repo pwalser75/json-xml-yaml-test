@@ -2,6 +2,7 @@ package ch.frostnova.test.jackson.test;
 
 import ch.frostnova.test.jackson.test.util.ObjectMappers;
 import ch.frostnova.test.jackson.test.util.domain.Movie;
+import ch.frostnova.test.jackson.test.util.serializer.HessianSerializer;
 import ch.frostnova.test.jackson.test.util.serializer.JacksonSerializer;
 import ch.frostnova.test.jackson.test.util.serializer.JavaClassicSerializer;
 import ch.frostnova.test.jackson.test.util.serializer.MovieProtobufSerializer;
@@ -58,6 +59,11 @@ class SerializationTest {
     @Test
     void testProtobuf() {
         testFormat("PROTOBUF", new MovieProtobufSerializer(), true);
+    }
+
+    @Test
+    void testHessian() {
+        testFormat("HESSIAN", new HessianSerializer<>(Movie.class), true);
     }
 
     @Test

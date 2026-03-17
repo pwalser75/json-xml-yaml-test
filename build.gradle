@@ -44,6 +44,7 @@ ext {
     logbackVersion = '1.5.32'
     jsonSchemaValidatorVersion = '1.5.1'
     protobufVersion = '3.25.5'
+    hessianVersion = '4.0.66'
     mapstructVersion = '1.6.3'
 
     libs = [
@@ -59,6 +60,7 @@ ext {
             properties : "com.fasterxml.jackson.dataformat:jackson-dataformat-properties:${jacksonVersion}",
             jsonSchema : "org.everit.json:org.everit.json.schema:${jsonSchemaValidatorVersion}",
             protobuf   : "com.google.protobuf:protobuf-java:${protobufVersion}",
+            hessian   : "com.caucho:hessian:${hessianVersion}",
             mapstruct  : "org.mapstruct:mapstruct:${mapstructVersion}",
             testbase   : [
                     "org.junit.jupiter:junit-jupiter:$junitVersion",
@@ -99,10 +101,12 @@ dependencies {
     implementation libs.csv
     implementation libs.jsonSchema
     implementation libs.protobuf
+    implementation libs.hessian
     implementation libs.mapstruct
-    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
     implementation libs.loggingAPI
     implementation libs.loggingImpl
+
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 
     testImplementation libs.testbase
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
